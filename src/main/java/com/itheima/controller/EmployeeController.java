@@ -76,7 +76,6 @@ public class EmployeeController {
     }
 
 
-
     /**
      * 员工退出
      *
@@ -89,7 +88,6 @@ public class EmployeeController {
         request.getSession().removeAttribute("employee");
         return R.success("退出成功");
     }
-
 
 
     /**
@@ -124,7 +122,6 @@ public class EmployeeController {
     }
 
 
-
     /**
      * 员工信息分页查询
      *
@@ -157,7 +154,6 @@ public class EmployeeController {
     }
 
 
-
     /**
      * 根据id修改员工信息
      *
@@ -175,14 +171,14 @@ public class EmployeeController {
         log.info("EmployeeController中的Update" + "线程id为：{}", id);
 
         //更新信息
-    /*    employee.setUpdateTime(LocalDateTime.now());
-        employee.setUpdateUser(empId);
-*/
+//        employee.setUpdateTime(LocalDateTime.now());
+//        employee.setUpdateUser(empId);
+
         employeeService.updateById(employee);
+        //log.warn("准备返回R.success");
 
         return R.success("员工信息修改成功");
     }
-
 
 
     /**
@@ -193,6 +189,7 @@ public class EmployeeController {
      */
     @GetMapping("/{id}")
     public R<Employee> getById(@PathVariable long id) {
+        log.info("根据id查询员工信息...");
         Employee employee = employeeService.getById(id);
         if (employee != null) return R.success(employee);
         return R.error("没有查询到对应的员工信息");
