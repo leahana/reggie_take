@@ -24,8 +24,9 @@ public class FieldFillObjectHandler implements MetaObjectHandler {
 
         metaObject.setValue("createTime", LocalDateTime.now());
         metaObject.setValue("updateTime", LocalDateTime.now());
-        metaObject.setValue("createUser", 1L);
-        metaObject.setValue("updateUser", 1L);
+        //从线程局部变量ThreadLocal中获取id
+        metaObject.setValue("createUser", BaseContext.getCurrentId());
+        metaObject.setValue("updateUser", BaseContext.getCurrentId());
 
 
     }
@@ -45,7 +46,7 @@ public class FieldFillObjectHandler implements MetaObjectHandler {
 
 
         metaObject.setValue("updateTime", LocalDateTime.now());
-        metaObject.setValue("updateUser", 1L);
+        metaObject.setValue("updateUser", BaseContext.getCurrentId());
 
     }
 }

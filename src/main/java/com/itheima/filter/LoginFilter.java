@@ -1,6 +1,7 @@
 package com.itheima.filter;
 
 import com.alibaba.fastjson.JSON;
+import com.itheima.common.BaseContext;
 import com.itheima.common.R;
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
@@ -57,6 +58,11 @@ public class LoginFilter implements Filter {
         //4 判断登录状态,如果登录,则直接放行(用session判断
         if (req.getSession().getAttribute("employee") != null) {
             log.info("用户已登录,用户id为{}", req.getSession().getAttribute("employee"));
+
+            //在拦截器的放行方法doFilter方法中放行之前获取HttpSession中的登录用户信息set到此线程的局部对象ThreadLocal中
+            Long empId = (Long) req.getSession().getAttribute("employee");
+            BaseContext.setCurrentId(empId);
+
             filterChain.doFilter(req,resp);
             return;
         }

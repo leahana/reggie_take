@@ -20,9 +20,19 @@ import java.time.LocalDateTime;
 @RestController
 @RequestMapping("/employee")
 public class EmployeeController {
+
     @Autowired
     private EmployeeService employeeService;
 
+    /*
+处理逻辑如下：
+①. 将页面提交的密码password进行md5加密处理, 得到加密后的字符串
+②. 根据页面提交的用户名username查询数据库中员工数据信息
+③. 如果没有查询到, 则返回登录失败结果
+④. 密码比对，如果不一致, 则返回登录失败结果
+⑤. 查看员工状态，如果为已禁用状态，则返回员工已禁用结果
+⑥. 登录成功，将员工id存入Session, 并返回登录成功结果
+ */
 
     /**
      * 员工登录
@@ -33,6 +43,7 @@ public class EmployeeController {
      */
     @PostMapping("/login")
     public R<Employee> login(HttpServletRequest request, @RequestBody Employee employee) {
+
         System.out.println(employee);
         //1 将前端提交的代码进行md5加密
         String password = employee.getPassword();
@@ -65,6 +76,7 @@ public class EmployeeController {
     }
 
 
+
     /**
      * 员工退出
      *
@@ -77,6 +89,7 @@ public class EmployeeController {
         request.getSession().removeAttribute("employee");
         return R.success("退出成功");
     }
+
 
 
     /**
@@ -111,6 +124,7 @@ public class EmployeeController {
     }
 
 
+
     /**
      * 员工信息分页查询
      *
@@ -133,7 +147,7 @@ public class EmployeeController {
         //添加过滤条件
         lqw.like(StringUtils.isNotEmpty(name), Employee::getName, name);
 
-        //添加排序条件
+        //添加排序条件 降序
         lqw.orderByDesc(Employee::getUpdateTime);
 
         //查询
@@ -141,6 +155,7 @@ public class EmployeeController {
         return R.success(pageinfo);
 
     }
+
 
 
     /**
@@ -168,13 +183,14 @@ public class EmployeeController {
         return R.success("员工信息修改成功");
     }
 
+
+
     /**
      * 根据id查询员工信息
      *
      * @param id
      * @return
      */
-
     @GetMapping("/{id}")
     public R<Employee> getById(@PathVariable long id) {
         Employee employee = employeeService.getById(id);

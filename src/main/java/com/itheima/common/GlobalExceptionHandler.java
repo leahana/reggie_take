@@ -51,4 +51,18 @@ public class GlobalExceptionHandler {
         return R.error("未知错误");
     }
 
+    /**
+     * 异常处理方法
+     *
+     * @return
+     */
+    @ExceptionHandler(CustomException.class)
+    public R<String> exceptionHandler(CustomException ex) {
+        //记录日志
+        log.error(ex.getMessage());
+
+        //这里的getMessage是自定义异常
+        //message是 CategoryServiceImp 中抛出的
+        return R.error(ex.getMessage());
+    }
 }
