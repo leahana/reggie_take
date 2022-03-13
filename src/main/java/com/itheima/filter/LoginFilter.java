@@ -18,7 +18,7 @@ import static jdk.nashorn.internal.runtime.regexp.joni.Config.log;
 /**
  * 检查用户是否完成登录 过滤所有信息
  */
-@WebFilter(filterName = "loginCheckFilter", urlPatterns = "/")
+@WebFilter(filterName = "loginCheckFilter", urlPatterns = "/*")
 @Slf4j
 public class LoginFilter implements Filter {
 
@@ -30,6 +30,9 @@ public class LoginFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) servletRequest;
         HttpServletResponse resp = (HttpServletResponse) servletResponse;
+
+        long id = Thread.currentThread().getId();
+        log.info("doFilter" + "线程id为：{}", id);
 
         //1 获取本次请求的url
         String requestURI = req.getRequestURI();

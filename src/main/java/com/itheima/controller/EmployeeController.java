@@ -153,16 +153,17 @@ public class EmployeeController {
     public R<String> update(HttpServletRequest request, @RequestBody Employee employee) {
         //记录日志
         log.info(employee.toString());
-        long empId = (long) request.getSession().getAttribute("employee");
+        // long empId = (long) request.getSession().getAttribute("employee");
+
 
         long id = Thread.currentThread().getId();
-        log.info("EmployeeController中的Update"+"线程id为：{}",id);
+        log.info("EmployeeController中的Update" + "线程id为：{}", id);
 
         //更新信息
     /*    employee.setUpdateTime(LocalDateTime.now());
         employee.setUpdateUser(empId);
-
-        employeeService.updateById(employee);*/
+*/
+        employeeService.updateById(employee);
 
         return R.success("员工信息修改成功");
     }
