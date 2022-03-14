@@ -1,0 +1,13 @@
+package com.itheima.mapper;
+
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.itheima.entity.DishFlavor;
+import org.apache.ibatis.annotations.Mapper;
+
+/**
+ * 菜品口味Mapper
+ */
+@Mapper
+public interface DishFlavorMapper extends BaseMapper<DishFlavor> {
+
+}

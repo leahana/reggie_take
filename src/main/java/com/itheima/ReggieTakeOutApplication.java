@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletComponentScan;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Slf4j
 @SpringBootApplication
@@ -14,6 +15,7 @@ import org.springframework.boot.web.servlet.ServletComponentScan;
 注解, 自动注册Servlet的相关组件 ;
  */
 @ServletComponentScan//扫描@WebFilter的包
+@EnableTransactionManagement //开启对事物管理的支持
 public class ReggieTakeOutApplication {
 
     public static void main(String[] args) {
