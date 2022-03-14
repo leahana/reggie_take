@@ -1,5 +1,6 @@
 package com.itheima.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.itheima.entity.Dish;
 import com.itheima.entity.DishDto;
@@ -7,6 +8,7 @@ import com.itheima.entity.DishFlavor;
 import com.itheima.mapper.DishMapper;
 import com.itheima.service.DishFlavorService;
 import com.itheima.service.DishService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -68,5 +70,67 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish>
         //保存菜品口味数据到菜品口味表dish_flavors
         dishFlavorService.saveBatch(flavors);
 
+    }
+
+
+    /**
+     * 根据id查询数据菜品(包含口味
+     *
+     * @param id
+     */
+    @Override
+    public DishDto getByIdWithFlavor(Long id) {
+        //本类getById(从ServiceImpl继承来的
+        Dish dish = this.getById(id);
+
+        //创建DishDto容器 准备存放数据
+        DishDto dishDto = new DishDto();
+
+        //拷贝数据
+        BeanUtils.copyProperties(dish, dishDto);
+
+        //查询当前菜品口味信息(从dish_flavor表查
+        //新建查询条件
+        LambdaQueryWrapper<DishFlavor> lqw = new LambdaQueryWrapper<>();
+
+        //设定查询条件
+        lqw.eq(dish.getId() != null, DishFlavor::getId, dish.getId());
+        List<DishFlavor> list = dishFlavorService.list(lqw);
+        dishDto.setFlavors(list);
+
+        return dishDto;
+
+    }
+
+
+    @Override
+    public void updateWithFlavor(DishDto dishDto) {
+        //更新 dish表的基本信息 调用本类update方法
+        this.updateById(dishDto);
+
+        //清理当前菜品口味数据--删除dish_flavor表的数据
+        //设置删除条件器
+        LambdaQueryWrapper<DishFlavor> lqw = new LambdaQueryWrapper<>();
+        lqw.eq(dishDto.getId() != null, DishFlavor::getDishId, dishDto.getId());
+
+        //根据条件删除dish_flavor表的口味数据
+        dishFlavorService.remove(lqw);
+
+        //添加提交过来的Flavor数据
+        List<DishFlavor> list = dishDto.getFlavors();
+
+        list = list.stream().map((item) -> {
+            //菜品口味表:dish_flavor中 dish_id关联了菜品id
+
+            //获取list集合中每一个DishFlavor对象的id属性
+            Long id = item.getId();
+            //绑定菜品id是这个菜的口味
+            item.setDishId(id);
+
+            return item;
+        }).collect(Collectors.toList());
+
+        //dish_flavor表的insert操作
+        dishFlavorService.saveBatch(list);
     }
 }

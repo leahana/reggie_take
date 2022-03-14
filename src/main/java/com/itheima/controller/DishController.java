@@ -33,6 +33,7 @@ public class DishController {
     @Autowired
     private CategoryService categoryService;
 
+
     /**
      * 新增菜品
      *
@@ -50,6 +51,7 @@ public class DishController {
         return R.success("新增菜品成功");
 
     }
+
 
     /**
      * 菜品分页查询
@@ -115,4 +117,32 @@ public class DishController {
     }
 
 
+    /**
+     * 根据id查询菜品信息和对应的口味信息
+     *
+     * @param id
+     * @return
+     */
+    @GetMapping("/{id}")
+    public R<DishDto> getById(@PathVariable Long id) {
+        DishDto dishDto = dishService.getByIdWithFlavor(id);
+        return R.success(dishDto);
+    }
+
+
+    /**
+     * 修改菜品(包括口味
+     * @param dishDto
+     * @return
+     */
+    @PutMapping
+    public R<String> update(@RequestBody DishDto dishDto) {
+        //记录日志
+        log.info("更新菜品:{}",dishDto.toString());
+
+        dishService.updateWithFlavor(dishDto);
+
+        return R.success("修改菜品成功");
+
+    }
 }
