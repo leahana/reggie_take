@@ -43,7 +43,14 @@ public class LoginFilter implements Filter {
 
         //定义不需要拦截的请求路径静态资源..登录路径..
         String[] urls = new String[]{"/employee/login", "/employee/logout", "/backend/**", "/front/**"};
-
+/*
+        for (String url : urls) {
+            boolean match = PATH_MATCH.match(url, requestURI);
+            if (match){
+                filterChain.doFilter(servletRequest,servletResponse);
+                return;
+            }
+        }*/
         //2 判断本次请求是否需要处理
         boolean check = check(urls, requestURI);
 

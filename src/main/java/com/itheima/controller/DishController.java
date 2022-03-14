@@ -33,6 +33,35 @@ public class DishController {
     @Autowired
     private CategoryService categoryService;
 
+    /**
+     * 根据条件查询响应的菜品数据
+     *
+     * @return
+     */
+    @GetMapping("/list")
+    public R<List<Dish>> list(Dish dish) {
+        //初始化条件查询器
+        LambdaQueryWrapper<Dish> lqw = new LambdaQueryWrapper<>();
+
+        //设置条件
+        lqw.eq(dish.getCategoryId() != null, Dish::getCategoryId, dish.getCategoryId());
+
+
+        //添加条件，查询状态为1（起售状态）的菜品
+        lqw.eq(Dish::getStatus, 1);
+
+
+        //设置查询条件排序, 升序,        更新时间降序
+        lqw.orderByAsc(Dish::getSort).orderByDesc(Dish::getCreateTime);
+
+
+        //查询
+        List<Dish> list = dishService.list(lqw);
+
+
+        //返回查询结果
+        return R.success(list);
+    }
 
     /**
      * 新增菜品
@@ -89,26 +118,24 @@ public class DishController {
 
         //单独取出dishPage中的list进行处理
         List<Dish> records = dishPage.getRecords();
-        List<DishDto> list = records
-                .stream()
-                .map((item) -> {
-                    //新建DishDto用于封装categoryName属性
-                    DishDto dishDto = new DishDto();
-                    Long id = item.getCategoryId();//分类id
-                    //根据id查询分类对象
-                    Category category = categoryService.getById(id);
-                    String categoryName = category.getName();
+        List<DishDto> list = records.stream().map((item) -> {
+            //新建DishDto用于封装categoryName属性
+            DishDto dishDto = new DishDto();
+            Long id = item.getCategoryId();//分类id
+            //根据id查询分类对象
+            Category category = categoryService.getById(id);
+            String categoryName = category.getName();
 
-                    dishDto.setCategoryName(categoryName);
+            dishDto.setCategoryName(categoryName);
 
-                    //拷贝其他属性
-                    BeanUtils.copyProperties(item, dishDto);
+            //拷贝其他属性
+            BeanUtils.copyProperties(item, dishDto);
 
-                    //返回dishDto对象
-                    return dishDto;
+            //返回dishDto对象
+            return dishDto;
 
-                    //收集dishDto对象封装成集合
-                }).collect(Collectors.toList());
+            //收集dishDto对象封装成集合
+        }).collect(Collectors.toList());
         //将处理完的集合封装到dishDtoPage中
         dishDtoPage.setRecords(list);
 
@@ -132,13 +159,14 @@ public class DishController {
 
     /**
      * 修改菜品(包括口味
+     *
      * @param dishDto
      * @return
      */
     @PutMapping
     public R<String> update(@RequestBody DishDto dishDto) {
         //记录日志
-        log.info("更新菜品:{}",dishDto.toString());
+        log.info("更新菜品:{}", dishDto.toString());
 
         dishService.updateWithFlavor(dishDto);
 
