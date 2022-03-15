@@ -334,7 +334,7 @@
         },
         methods: {
           async init () {
-            queryDishById(this.id).then(res => {
+            queryDishById(this.id).then((res)=> {
               console.log(res)
               if (String(res.code) === '1') {
                 this.ruleForm = { ...res.data }

@@ -41,6 +41,29 @@ public class SetmealController {
     @Autowired
     private CategoryService categoryService;
 
+
+
+    /**
+     * 根据id查询
+     * @return
+     */
+    //整不明白
+    @GetMapping("/{id}")
+    public R<Setmeal> getById(@PathVariable Long id){
+
+
+        Setmeal Setmeal = setmealService.getById(id);
+
+
+        return R.success(Setmeal);
+
+
+    }
+
+
+
+
+
     /**
      * 根据条件查询套餐数据
      *
@@ -143,6 +166,7 @@ public class SetmealController {
     }
 
 
+
     /**
      * 批量删除
      *
@@ -159,18 +183,5 @@ public class SetmealController {
         return R.success("套餐数据删除成功");
     }
 
-/*
-    *//**
-     * 根据id查询
-     * @return
-     *//*
-    @GetMapping("/{id}")
-    public R<Setmeal> getById(@PathVariable Long id){
 
-
-        Setmeal Setmeal = setmealService.getById(id);
-
-
-        return R.success(Setmeal);
-    }*/
 }
