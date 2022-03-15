@@ -66,7 +66,7 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impl
         lqw.eq(Setmeal::getStatus, 1);
 
         //统计计数
-        int count = this.count();
+        int count = this.count(lqw);
 
         //如果count>0 说明有菜品关联 不能删除 抛出异常
         if (count > 0) {
