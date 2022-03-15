@@ -35,10 +35,80 @@ public class DishController {
 
     /**
      * 根据条件查询响应的菜品数据
+     * 适配网页端和移动端
      *
      * @return
      */
+
     @GetMapping("/list")
+    public R<List<DishDto>> list(Dish dish) {
+        //初始化条件查询器
+        LambdaQueryWrapper<Dish> lqw = new LambdaQueryWrapper<>();
+
+        //设置条件(菜品种类id
+        lqw.eq(dish.getCategoryId() != null, Dish::getCategoryId, dish.getCategoryId());
+
+
+        //添加条件，查询状态为1（起售状态）的菜品
+        lqw.eq(Dish::getStatus, 1);
+
+
+        //设置查询条件排序, 升序,        更新时间降序
+        lqw.orderByAsc(Dish::getSort).orderByDesc(Dish::getCreateTime);
+
+
+        //查询
+        List<Dish> list = dishService.list(lqw);
+
+        //用dtoList存放list处理完之后的数据
+        List<DishDto> dtoList;
+
+        dtoList = list.stream().map((temp) -> {
+
+            //dishDto对象用于接受数据
+            DishDto dishDto = new DishDto();
+
+            //拷贝
+            BeanUtils.copyProperties(temp, dishDto);
+
+            //获取菜品种类id
+            Long categoryId = temp.getCategoryId();
+
+            //根据id查询分类的对象
+            Category category = categoryService.getById(categoryId);
+
+            if (category != null) {
+                //如果查询到的分类对象不是空
+                String categoryName = category.getName();
+                //给dishDto对象设置categoryName
+                dishDto.setCategoryName(categoryName);
+            }
+
+            //获取当前菜品的id
+            Long dishId = temp.getId();
+
+            //设置条件查询器(查询菜品口味的
+            LambdaQueryWrapper<DishFlavor> lqwDf = new LambdaQueryWrapper<>();
+
+            //设置条件为菜品id--dishId
+            lqwDf.eq(DishFlavor::getId, dishId);
+
+            //查询到这个菜品id对应的所有口味集合
+            //SQL:select * from dish_flavor where dish_id = ?
+            List<DishFlavor> dishFlavors = dishFlavorService.list(lqwDf);
+
+            dishDto.setFlavors(dishFlavors);
+            return dishDto;
+        }).collect(Collectors.toList());
+
+
+        //返回查询结果
+        return R.success(dtoList);
+    }
+
+
+/*网页端
+     @GetMapping("/list")
     public R<List<Dish>> list(Dish dish) {
         //初始化条件查询器
         LambdaQueryWrapper<Dish> lqw = new LambdaQueryWrapper<>();
@@ -61,7 +131,7 @@ public class DishController {
 
         //返回查询结果
         return R.success(list);
-    }
+    }*/
 
     /**
      * 新增菜品

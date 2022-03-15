@@ -69,7 +69,7 @@ public class CategoryController {
      * @param id
      * @return R<String>
      */
-    @DeleteMapping()
+    @DeleteMapping
     public R<String> deleteById(Long id) {
         //记录日志
         log.info("删除分类,id为:{}", id);

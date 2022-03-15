@@ -41,6 +41,39 @@ public class SetmealController {
     @Autowired
     private CategoryService categoryService;
 
+    /**
+     * 根据条件查询套餐数据
+     *
+     * @param setmeal
+     * @return
+     */
+    @GetMapping("/list")
+    public R<List<Setmeal>> list(@RequestBody Setmeal setmeal) {
+        //条件查询器
+        LambdaQueryWrapper<Setmeal> lqw = new LambdaQueryWrapper<>();
+
+        //设置查询条件--categoryId
+        lqw.eq(setmeal.getCategoryId() != null, Setmeal::getCategoryId, setmeal.getCategoryId());
+
+        //设置查询条件--status
+        lqw.eq(setmeal.getStatus() != null, Setmeal::getStatus, setmeal.getStatus());
+
+        //设置排序条件--根据更新时间降序
+        lqw.orderByDesc(Setmeal::getUpdateTime);
+
+        //查询
+        List<Setmeal> list = setmealService.list(lqw);
+
+        return R.success(list);
+    }
+
+
+    /**
+     * 新增套餐
+     *
+     * @param setmealDto
+     * @return
+     */
     @PostMapping
     public R<String> save(@RequestBody SetmealDto setmealDto) {
         //记录日志
@@ -51,10 +84,20 @@ public class SetmealController {
         return R.success("新增套餐成功");
     }
 
+
+    /**
+     * 分页条件查询
+     *
+     * @param page
+     * @param pageSize
+     * @param name
+     * @return
+     */
     @GetMapping("/page")
     public R<Page> page(int page, int pageSize, String name) {
         //初始化分页构造器对象
         Page<Setmeal> iPage = new Page<>(page, pageSize);
+
         Page<SetmealDto> dtoPage = new Page<>();
 
         //初始化条件查询器
@@ -102,18 +145,32 @@ public class SetmealController {
 
     /**
      * 批量删除
+     *
      * @param ids
-
      * @return
      */
     @DeleteMapping
     public R<String> delete(@RequestParam List<Long> ids) {
         //记录日志
-        log.info("准备删除 id:{}",ids);
+        log.info("准备删除 id:{}", ids);
 
         setmealService.removeWithDish(ids);
 
         return R.success("套餐数据删除成功");
     }
 
+/*
+    *//**
+     * 根据id查询
+     * @return
+     *//*
+    @GetMapping("/{id}")
+    public R<Setmeal> getById(@PathVariable Long id){
+
+
+        Setmeal Setmeal = setmealService.getById(id);
+
+
+        return R.success(Setmeal);
+    }*/
 }
