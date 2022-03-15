@@ -14,7 +14,7 @@ public interface SetmealService extends IService<Setmeal> {
      *
      * @param setmealDto
      */
-    void saveWithDIsh(SetmealDto setmealDto);
+    void saveWithDish(SetmealDto setmealDto);
 
 
     /**

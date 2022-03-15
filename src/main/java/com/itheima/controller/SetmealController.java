@@ -46,7 +46,7 @@ public class SetmealController {
         //记录日志
         log.info("套餐信息:{}", setmealDto);
 
-        setmealService.saveWithDIsh(setmealDto);
+        setmealService.saveWithDish(setmealDto);
 
         return R.success("新增套餐成功");
     }

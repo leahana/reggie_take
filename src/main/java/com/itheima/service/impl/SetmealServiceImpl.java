@@ -29,7 +29,7 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impl
      * @param setmealDto
      */
     @Override
-    public void saveWithDIsh(SetmealDto setmealDto) {
+    public void saveWithDish(SetmealDto setmealDto) {
         //保存套餐的基本信息,操作setmeal库
         this.save(setmealDto);
         List<SetmealDish> setmealDishes = setmealDto.getSetmealDishes();

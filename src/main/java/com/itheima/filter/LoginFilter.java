@@ -32,8 +32,8 @@ public class LoginFilter implements Filter {
         HttpServletRequest req = (HttpServletRequest) servletRequest;
         HttpServletResponse resp = (HttpServletResponse) servletResponse;
 
-        long id = Thread.currentThread().getId();
-        log.info("doFilter" + "线程id为：{}", id);
+//        long id = Thread.currentThread().getId();
+//        log.info("doFilter" + "线程id为：{}", id);
 
         //1 获取本次请求的url
         String requestURI = req.getRequestURI();
@@ -42,7 +42,14 @@ public class LoginFilter implements Filter {
         log.info("拦截到请求:{}", requestURI);
 
         //定义不需要拦截的请求路径静态资源..登录路径..
-        String[] urls = new String[]{"/employee/login", "/employee/logout", "/backend/**", "/front/**"};
+        String[] urls = new String[]{
+                "/employee/login",
+                "/employee/logout",
+                "/backend/**",
+                "/front/**",
+                "/common/**",
+                "/user/sendMsg",
+                "/user/login"};
 /*
         for (String url : urls) {
             boolean match = PATH_MATCH.match(url, requestURI);
@@ -64,15 +71,31 @@ public class LoginFilter implements Filter {
 
         //4 判断登录状态,如果登录,则直接放行(用session判断
         if (req.getSession().getAttribute("employee") != null) {
+            //记录日志
             log.info("用户已登录,用户id为{}", req.getSession().getAttribute("employee"));
 
             //在拦截器的放行方法doFilter方法中放行之前获取HttpSession中的登录用户信息set到此线程的局部对象ThreadLocal中
+
             Long empId = (Long) req.getSession().getAttribute("employee");
             BaseContext.setCurrentId(empId);
 
+            filterChain.doFilter(req, resp);
+            return;
+        }
+        //添加了user登录状态的过滤器放行判断
+        if (req.getSession().getAttribute("user")!=null){
+            //记录日志
+            log.info("用户已登录，用户id为：{}",req.getSession().getAttribute("user"));
+
+            Long userId = (Long) req.getSession().getAttribute("user");
+
+            BaseContext.setCurrentId(userId);
+
+            //放行
             filterChain.doFilter(req,resp);
             return;
         }
+
 
         log.info("用户未登录");
 
