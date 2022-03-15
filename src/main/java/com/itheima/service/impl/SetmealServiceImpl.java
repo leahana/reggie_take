@@ -33,13 +33,13 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impl
         //保存套餐的基本信息,操作setmeal库
         this.save(setmealDto);
         List<SetmealDish> setmealDishes = setmealDto.getSetmealDishes();
-
-        setmealDishes = setmealDishes.stream().map((item) -> {
+//======================================================================================//
+        setmealDishes = setmealDishes.stream().peek((item) -> {
             //setmeal_dish的SetmealId关联了套餐表主键id
             //获取list集合中每一个setmealDto对象的id属性
             //绑定菜品id
             item.setSetmealId(setmealDto.getId());
-            return item;
+           // return item;
         }).collect(Collectors.toList());
 
         //保存套餐和菜品的关联信息，操作setmeal_dish,执行insert操作
@@ -79,7 +79,7 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impl
         //新建条件查询器准备删除SetmealDish数据
         LambdaQueryWrapper<SetmealDish> qw = new LambdaQueryWrapper<>();
 
-        //添加条件
+        //添加条件reggie
         qw.in(SetmealDish::getId, ids);
 
         //删除关系 setmeal_dish表中的数据
