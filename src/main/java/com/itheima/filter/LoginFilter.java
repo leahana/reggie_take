@@ -32,8 +32,8 @@ public class LoginFilter implements Filter {
         HttpServletRequest req = (HttpServletRequest) servletRequest;
         HttpServletResponse resp = (HttpServletResponse) servletResponse;
 
-//        long id = Thread.currentThread().getId();
-//        log.info("doFilter" + "线程id为：{}", id);
+//      long id = Thread.currentThread().getId();
+//      log.info("doFilter" + "线程id为：{}", id);
 
         //1 获取本次请求的url
         String requestURI = req.getRequestURI();
@@ -57,7 +57,9 @@ public class LoginFilter implements Filter {
                 filterChain.doFilter(servletRequest,servletResponse);
                 return;
             }
-        }*/
+        }
+ */
+
         //2 判断本次请求是否需要处理
         boolean check = check(urls, requestURI);
 
@@ -82,17 +84,19 @@ public class LoginFilter implements Filter {
             filterChain.doFilter(req, resp);
             return;
         }
+
+
         //添加了user登录状态的过滤器放行判断
-        if (req.getSession().getAttribute("user")!=null){
+        if (req.getSession().getAttribute("user") != null) {
             //记录日志
-            log.info("用户已登录，用户id为：{}",req.getSession().getAttribute("user"));
+            log.info("用户已登录，用户id为：{}", req.getSession().getAttribute("user"));
 
             Long userId = (Long) req.getSession().getAttribute("user");
 
             BaseContext.setCurrentId(userId);
 
             //放行
-            filterChain.doFilter(req,resp);
+            filterChain.doFilter(req, resp);
             return;
         }
 
