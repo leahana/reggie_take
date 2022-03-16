@@ -14,7 +14,6 @@ import java.util.List;
 @Slf4j
 @Configuration
 
-
 public class SpringMvcConfig extends WebMvcConfigurationSupport {
 
     /**
