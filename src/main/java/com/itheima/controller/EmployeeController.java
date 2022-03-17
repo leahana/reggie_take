@@ -6,15 +6,13 @@ import com.itheima.common.R;
 import com.itheima.entity.Employee;
 import com.itheima.service.EmployeeService;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.DigestUtils;
-
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
+
 
 @Slf4j
 @RestController
@@ -93,12 +91,12 @@ public class EmployeeController {
     /**
      * 新增员工
      *
-     * @param request
+     * @param
      * @param employee
      * @return
      */
     @PostMapping
-    public R<String> save(HttpServletRequest request, @RequestBody Employee employee) {
+    public R<String> save( @RequestBody Employee employee) {
 
         //记录日志
         log.info("新增员工,员工信息:{}", employee.toString());

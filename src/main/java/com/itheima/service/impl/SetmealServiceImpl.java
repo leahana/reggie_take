@@ -38,8 +38,11 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impl
             //setmeal_dish的SetmealId关联了套餐表主键id
             //获取list集合中每一个setmealDto对象的id属性
             //绑定菜品id
+
             item.setSetmealId(setmealDto.getId());
-           // return item;
+
+            // return item;
+
         }).collect(Collectors.toList());
 
         //保存套餐和菜品的关联信息，操作setmeal_dish,执行insert操作

@@ -38,6 +38,8 @@ public class FieldFillObjectHandler implements MetaObjectHandler {
     @Override
     public void updateFill(MetaObject metaObject) {
 
+
+
         log.info("公共字段自动填充[update]..." + metaObject.toString());
 
 

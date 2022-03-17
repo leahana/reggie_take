@@ -19,7 +19,12 @@ spring:
       url: jdbc:mysql://localhost:3306/reggie?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
       username: root
       password: 2788
-
+      #redis相关配置==注意: 引入上述依赖时,需要注意yml文件前面的缩进,上述配置应该配置在spring层级下面。==
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    password: root@2788
+    database: 1
 
 
 mybatis-plus:
@@ -35,3 +40,5 @@ mybatis-plus:
 
 reggie:
   path: E:\software\img\
+
+

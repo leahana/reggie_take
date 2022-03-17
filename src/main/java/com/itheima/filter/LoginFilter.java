@@ -8,8 +8,10 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.AntPathMatcher;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -26,6 +28,28 @@ public class LoginFilter implements Filter {
     //路径配置器 支持通配符
     //AntPathMatcher提供了丰富的API，主要以doMatch为主
     private static AntPathMatcher PATH_MATCH = new AntPathMatcher();
+
+
+
+    @Value("${reggie.path}")
+    private String basePath;
+
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
+
+        //拦截器初始化时候判断图片存放文件夹是否存在 如果不存在,创建文件夹,
+
+
+        //创建目标对象
+        File dir = new File(basePath);
+
+        //判断当前目录是否存在
+        if (!dir.exists()) {
+            //目标不存在,需要创建
+            dir.mkdirs();
+        }
+
+    }
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
@@ -107,8 +131,9 @@ public class LoginFilter implements Filter {
         //5 如果未登录则返回登录结果
 
         resp.getWriter().write(JSON.toJSONString(R.error("MOTLOGIN")));
-        return;
 
+        //return R.error("NOT LOGIN");
+        return;
 
     }
 

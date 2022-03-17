@@ -55,7 +55,7 @@ public class CommonController {
         //使用uuid生成暂存文件名
         String fileName = UUID.randomUUID() + substring;
 
-        //创建目标对象
+    /*    //创建目标对象
         File dir = new File(basePath);
 
         //判断当前目录是否存在
@@ -64,7 +64,7 @@ public class CommonController {
             dir.mkdirs();
         }
 
-
+*/
         try {
             //将临时文件转存到指定位置
             file.transferTo(new File(basePath + fileName));
