@@ -12,9 +12,11 @@ import javax.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @Slf4j
@@ -22,6 +24,9 @@ import java.util.Map;
 public class UserController {
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     /**
      * 发送手机短信验证码
@@ -48,7 +53,14 @@ public class UserController {
             //SMSUtils.sendMessage("瑞吉外卖", "18711111111", phone, code);
 
             //将要生成的验证码保存到session
-            session.setAttribute(phone, code);
+            //session.setAttribute(phone, code);
+
+            //将生成的验证码缓存到redis中,并且设置有效期为5min
+            //         键            值           时间              时间单位
+            //四个参数(Object key, object value ,long timeout,TimeUtil unit)
+            redisTemplate.opsForValue().set(phone, code, 5, TimeUnit.MINUTES);
+
+
             return R.success("手机验证码发送成功");
         }
         return R.error("信息发送失败,请稍后再试");
@@ -75,7 +87,10 @@ public class UserController {
 
         //获取验证码(从session中 用于做判断
         //取出字符串phone的值 不是这个字符串"phone"
-        Object codeInSession = session.getAttribute(phone);
+        //Object codeInSession = session.getAttribute(phone);
+
+        //从Redis中获取保存的验证码
+        Object codeInSession = redisTemplate.opsForValue().get(phone);
 
         //进行验证码校验(页面提交的验证码是否和session中的验证码一致,首先要判断是不是空
         if (codeInSession != null && codeInSession.equals(code)) {
@@ -100,6 +115,9 @@ public class UserController {
 
             //是老用户,将查询到的消息返回之前将id存入session
             session.setAttribute("user", user.getId());
+
+            //如果用户登录成功,删除Redis中缓存的验证码
+            redisTemplate.delete(phone);
 
             return R.success(user);
         }
