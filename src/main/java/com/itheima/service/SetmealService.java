@@ -33,5 +33,5 @@ public interface SetmealService extends IService<Setmeal> {
      * @param id
      * @return
      */
-    Setmeal getWithDish(Long id);
+    SetmealDto getWithDish(Long id);
 }

@@ -3,12 +3,15 @@ package com.itheima.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.itheima.common.CustomException;
+import com.itheima.entity.Category;
 import com.itheima.entity.Setmeal;
 import com.itheima.entity.SetmealDish;
 import com.itheima.entity.SetmealDto;
 import com.itheima.mapper.SetmealMapper;
+import com.itheima.service.CategoryService;
 import com.itheima.service.SetmealDishService;
 import com.itheima.service.SetmealService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +25,9 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impl
 
     @Autowired
     private SetmealDishService setmealDishService;
+
+    @Autowired
+    private CategoryService categoryService;
 
     /**
      * 添加 同时添加菜品和套餐
@@ -97,18 +103,29 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impl
     @Override
     public SetmealDto getWithDish(Long id) {
 
+        //setmealid
         //本类getById(从ServiceImpl继承来的
         Setmeal setmeal = this.getById(id);
 
         //初始化条件查询器
-        LambdaQueryWrapper<Setmeal> lqw = new LambdaQueryWrapper<>();
+        LambdaQueryWrapper<SetmealDish> lqw = new LambdaQueryWrapper<>();
 
         //添加id条件
-        lqw.eq(Setmeal::getId, id);
+        lqw.eq(SetmealDish::getId, id);
 
-        //添加状态条件
-        lqw.eq(Setmeal::getStatus, 1);
+        //套餐包含的菜品
+        List<SetmealDish> list = setmealDishService.list(lqw);
 
-        return null;
+        SetmealDto setmealDto = new SetmealDto();
+        BeanUtils.copyProperties(setmeal, setmealDto);
+
+        setmealDto.setSetmealDishes(list);
+        Long categoryId = setmeal.getCategoryId();
+
+        Category byId = categoryService.getById(categoryId);
+
+        setmealDto.setCategoryName(byId.getName());
+
+        return setmealDto;
     }
 }

@@ -1,17 +1,14 @@
 package com.itheima.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.itheima.common.R;
 import com.itheima.entity.Category;
-import com.itheima.entity.Dish;
 import com.itheima.entity.Setmeal;
 import com.itheima.entity.SetmealDto;
 import com.itheima.service.CategoryService;
 import com.itheima.service.SetmealDishService;
 import com.itheima.service.SetmealService;
-import javax.rmi.CORBA.Util;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,13 +46,13 @@ public class SetmealController {
      */
     //整不明白
     @GetMapping("/{id}")
-    public R<Setmeal> getById(@PathVariable Long id){
+    public R<SetmealDto> getById(@PathVariable Long id){
 
 
-        Setmeal Setmeal = setmealService.getWithDish(id);
+        SetmealDto setmealDto = setmealService.getWithDish(id);
 
 
-        return R.success(Setmeal);
+        return R.success(setmealDto);
 
 
     }
@@ -67,19 +64,19 @@ public class SetmealController {
     /**
      * 根据条件查询套餐数据
      *
-     * @param setmeal
+     * @param
      * @return
      */
     @GetMapping("/list")
-    public R<List<Setmeal>> list(@RequestBody Setmeal setmeal) {
+    public R<List<Setmeal>> list(@RequestParam Long categoryId) {
         //条件查询器
         LambdaQueryWrapper<Setmeal> lqw = new LambdaQueryWrapper<>();
 
         //设置查询条件--categoryId
-        lqw.eq(setmeal.getCategoryId() != null, Setmeal::getCategoryId, setmeal.getCategoryId());
+        lqw.eq(categoryId != null, Setmeal::getCategoryId, categoryId);
 
         //设置查询条件--status
-        lqw.eq(setmeal.getStatus() != null, Setmeal::getStatus, setmeal.getStatus());
+        lqw.eq( Setmeal::getStatus, 1);
 
         //设置排序条件--根据更新时间降序
         lqw.orderByDesc(Setmeal::getUpdateTime);

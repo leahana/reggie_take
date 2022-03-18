@@ -124,7 +124,7 @@ public class DishController {
      * @return
      */
     @GetMapping("/list")
-    public R<List<DishDto>> list(Dish dish) {
+    public R<List<DishDto>> list(@RequestParam Long categoryId) {
 
 //        1). 改造DishController的list方法，先从Redis中获取分类对应的菜品数据，如果有则直接返回，无需查询数据库;
 //            如果没有则查询数据库，并将查询到的菜品数据存入Redis。
@@ -135,7 +135,7 @@ public class DishController {
 
         List<DishDto> dishDtoList = null;
         //动态构造key  dish_菜品品种id_菜品状态 dish_1397844391040167938_1
-        String key = "dish_" + dish.getCategoryId() + "_" + dish.getStatus();
+        String key = "dish_" + categoryId + "_" + 1;
 
         //先从redis中获取缓存数据
         dishDtoList = (List<DishDto>) redisTemplate.opsForValue().get("key");
@@ -151,7 +151,7 @@ public class DishController {
         LambdaQueryWrapper<Dish> lqw = new LambdaQueryWrapper<>();
 
         //设置条件(菜品种类id
-        lqw.eq(dish.getCategoryId() != null, Dish::getCategoryId, dish.getCategoryId());
+        lqw.eq(categoryId != null, Dish::getCategoryId, 1);
 
 
         //因为逻辑删除所以添加了添加了条件
@@ -178,10 +178,10 @@ public class DishController {
             BeanUtils.copyProperties(temp, dishDto);
 
             //获取菜品分类id
-            Long categoryId = temp.getCategoryId();
+            Long id = temp.getCategoryId();
 
             //根据id查询分类的对象
-            Category category = categoryService.getById(categoryId);
+            Category category = categoryService.getById(id);
 
             if (category != null) {
                 //如果查询到的分类对象不是空
@@ -324,7 +324,7 @@ public class DishController {
         LambdaQueryWrapper<Dish> lqw = new LambdaQueryWrapper<>();
 
         //逻辑删除添加了查询条件
-        lqw.eq(Dish::getIsDeleted,0);
+        lqw.eq(Dish::getIsDeleted, 0);
 
         //指定查询条件
         lqw.like(StringUtils.isNotEmpty(name), Dish::getName, name);

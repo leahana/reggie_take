@@ -16,6 +16,8 @@ import java.util.List;
 @Slf4j
 @RequestMapping("/category")
 public class CategoryController {
+
+
     @Autowired
     CategoryService categoryService;
 
@@ -102,17 +104,17 @@ public class CategoryController {
     /**
      * 根据条件查询分类数据
      *
-     * @param category
+     * @param
      * @return
      */
     @GetMapping("/list")
-    public R<List<Category>> getList(Category category) {
+    public R<List<Category>> getList(@RequestParam Integer type) {
         //条件构造器
         LambdaQueryWrapper<Category> lqw = new LambdaQueryWrapper<>();
 
         //添加条件
         //三个参数,第一个判断是否为空 在进行正常的条件查询
-        lqw.eq(category.getType() != null, Category::getType, category.getType());
+        lqw.eq(type != null, Category::getType, type);
 
         //添加排序条件
         //根据sort升序,再根据更新时间降序

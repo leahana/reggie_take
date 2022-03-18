@@ -1,6 +1,9 @@
 server:
   port: 8080
 spring:
+
+  main:
+    allow-circular-references: true
   servlet:
     #文件大小 MB必须大写
     #  maxFileSize 是单个文件大小
