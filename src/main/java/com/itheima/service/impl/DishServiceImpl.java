@@ -22,6 +22,8 @@ import java.util.stream.Collectors;
 public class DishServiceImpl extends ServiceImpl<DishMapper, Dish>
         implements DishService {
 
+
+
     //菜品口味service
     @Autowired
     private DishFlavorService dishFlavorService;
@@ -32,6 +34,8 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish>
 ③. 获取菜品口味列表，遍历列表，为菜品口味对象属性dishId赋值;
 ④. 批量保存菜品口味列表;
      */
+
+
 
     /**
      * 新增菜品，同时保存对应的口味数据
@@ -74,6 +78,8 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish>
     }
 
 
+
+
     /**
      * 根据id查询数据菜品(包含口味
      *
@@ -104,6 +110,12 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish>
     }
 
 
+
+
+    /**
+     * 更新菜品包括口味id
+     * @param dishDto
+     */
     @Override
     public void updateWithFlavor(DishDto dishDto) {
         //更新 dish表的基本信息 调用本类update方法
@@ -136,6 +148,14 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish>
     }
 
 
+
+
+    /**
+     * 更新菜品状态/批量更新菜品状态
+     * @param status
+     * @param ids
+     * @return
+     */
     @Override
     public boolean updateStatus(Integer status, List<Long> ids) {
 
@@ -150,6 +170,13 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish>
     }
 
 
+
+
+    /**
+     * 删除菜品/批量删除菜品(逻辑删除
+     * @param ids
+     * @return
+     */
     @Override
     public boolean deleteWithFlavor(List<Long> ids) {
 

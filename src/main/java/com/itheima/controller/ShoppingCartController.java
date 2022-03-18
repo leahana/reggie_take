@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 购物车controller
@@ -128,17 +129,33 @@ public class ShoppingCartController {
     @DeleteMapping("/clean")
     public R<String> clean() {
         //条件查询器
-        LambdaQueryWrapper<ShoppingCart> lqw=new LambdaQueryWrapper<>();
+        LambdaQueryWrapper<ShoppingCart> lqw = new LambdaQueryWrapper<>();
 
         //添加条件--用户id
-        lqw.eq(ShoppingCart::getUserId,BaseContext.getCurrentId());
+        lqw.eq(ShoppingCart::getUserId, BaseContext.getCurrentId());
 
         //SQL:delete from shopping_cart where user_id = ?
         shoppingCartService.remove(lqw);
 
         return R.success("清空购物车成功");
     }
+
+
+    @PostMapping("/sub")
+    public R<String> sub(@RequestBody Map<String, Long> map) {
+
+
+        //log.error(map.toString());
+
+
+        shoppingCartService.deleteDishOrSetmeal(map);
+
+
+        return R.success("移除成功");
+    }
+
 }
+
 
 
 
