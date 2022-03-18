@@ -1,10 +1,14 @@
 package com.itheima.controller;
 
-import com.itheima.service.CategoryService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.itheima.common.R;
-import com.itheima.entity.*;
+import com.itheima.entity.Category;
+import com.itheima.entity.Dish;
+import com.itheima.entity.DishDto;
+import com.itheima.entity.DishFlavor;
+import com.itheima.service.CategoryService;
 import com.itheima.service.DishFlavorService;
 import com.itheima.service.DishService;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +18,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -110,6 +116,7 @@ public class DishController {
 
         return R.success(dishDtoList);
     }*/
+
     /**
      * 根据条件查询响应的菜品数据
      * 适配网页端和移动端
@@ -146,6 +153,9 @@ public class DishController {
         //设置条件(菜品种类id
         lqw.eq(dish.getCategoryId() != null, Dish::getCategoryId, dish.getCategoryId());
 
+
+        //因为逻辑删除所以添加了添加了条件
+        lqw.eq(Dish::getIsDeleted, 0);
 
         //添加条件，查询状态为1（起售状态）的菜品
         lqw.eq(Dish::getStatus, 1);
@@ -208,7 +218,6 @@ public class DishController {
     }
 
 
-
     /**
      * 新增菜品
      *
@@ -245,7 +254,7 @@ public class DishController {
      *
      * @return
      */
-    @GetMapping("/page")
+    /* @GetMapping("/page")
     public R<Page> getAll(int page, int pageSize, String name) {
         //记录日志
         log.info("page={},pageSize={},name={}", page, pageSize, name);
@@ -267,7 +276,6 @@ public class DishController {
 
         //查询
         dishService.page(dishPage, lqw);
-
 
         //4). 遍历分页查询列表数据，根据分类ID查询分类信息，从而获取该菜品的分类名称
         //对象拷贝
@@ -299,8 +307,77 @@ public class DishController {
 
         //返回结果
         return R.success(dishDtoPage);
-    }
 
+
+    }*/
+    @GetMapping("/page")
+    public R<Map> getAll(int page, int pageSize, String name) {
+        //记录日志
+        log.info("page={},pageSize={},name={}", page, pageSize, name);
+
+        //构造分页构造器
+        IPage<Dish> dishPage = new Page<>(page, pageSize);
+        ///对象拷贝分页构造器
+        IPage<DishDto> dishDtoPage = new Page<>();
+
+        //新建查询条件
+        LambdaQueryWrapper<Dish> lqw = new LambdaQueryWrapper<>();
+
+        //逻辑删除添加了查询条件
+        lqw.eq(Dish::getIsDeleted,0);
+
+        //指定查询条件
+        lqw.like(StringUtils.isNotEmpty(name), Dish::getName, name);
+
+        //添加排序条件 降序
+        lqw.orderByDesc(Dish::getUpdateTime);
+
+        //查询
+        // int count = dishService.count(lqw);
+        dishService.page(dishPage, lqw);
+
+
+        //4). 遍历分页查询列表数据，根据分类ID查询分类信息，从而获取该菜品的分类名称
+        //对象拷贝
+        // protected List<T> records; page中的集合属性 用于查询到的对象集合
+        BeanUtils.copyProperties(dishPage, dishDtoPage, "records");
+
+        //单独取出dishPage中的list进行处理
+        List<Dish> records = dishPage.getRecords();
+        List<DishDto> list = records.stream().map((item) -> {
+            //新建DishDto用于封装categoryName属性
+            DishDto dishDto = new DishDto();
+            Long id = item.getCategoryId();//分类id
+            //根据id查询分类对象
+            Category category = categoryService.getById(id);
+            String categoryName = category.getName();
+
+            dishDto.setCategoryName(categoryName);
+
+            //拷贝其他属性
+            BeanUtils.copyProperties(item, dishDto);
+
+            //返回dishDto对象
+            return dishDto;
+
+            //收集dishDto对象封装成集合
+        }).collect(Collectors.toList());
+        //将处理完的集合封装到dishDtoPage中
+        dishDtoPage.setRecords(list);
+        Map map = new HashMap<>();
+
+
+        map.put("records", list);
+        long total = dishPage.getTotal();
+        int count = (int) total;
+        map.put("total", count);
+
+
+        //返回结果
+        return R.success(map);
+
+
+    }
 
 
     /**
@@ -314,7 +391,6 @@ public class DishController {
         DishDto dishDto = dishService.getByIdWithFlavor(id);
         return R.success(dishDto);
     }
-
 
 
     /**
@@ -337,4 +413,38 @@ public class DishController {
         return R.success("修改菜品成功");
 
     }
+
+
+    /**
+     * 批量逻辑删除
+     * 删除菜品/批量删除菜品
+     *
+     * @param ids
+     * @return
+     */
+    @DeleteMapping
+    public R<String> deleteIds(@RequestParam List<Long> ids) {
+
+        dishService.deleteWithFlavor(ids);
+
+        return R.success("删除成功");
+    }
+
+
+    /**
+     * 批量修改状态
+     *
+     * @param status
+     * @param ids
+     * @return R
+     */
+    @PostMapping("/status/{status}")
+    public R<String> updateStatus(@PathVariable Integer status,
+                                  @RequestParam List<Long> ids) {
+
+        dishService.updateStatus(status, ids);
+
+        return R.success("操作成功");
+    }
+
 }

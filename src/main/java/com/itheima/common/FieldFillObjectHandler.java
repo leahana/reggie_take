@@ -22,6 +22,7 @@ public class FieldFillObjectHandler implements MetaObjectHandler {
     public void insertFill(MetaObject metaObject) {
         log.info("公共字段自动填充[insert]..." + metaObject.toString());
 
+
         metaObject.setValue("createTime", LocalDateTime.now());
         metaObject.setValue("updateTime", LocalDateTime.now());
         //从线程局部变量ThreadLocal中获取id

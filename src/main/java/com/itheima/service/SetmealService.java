@@ -3,7 +3,6 @@ package com.itheima.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.itheima.entity.Setmeal;
 import com.itheima.entity.SetmealDto;
-import com.itheima.mapper.SetmealMapper;
 
 import java.util.List;
 
@@ -21,5 +20,18 @@ public interface SetmealService extends IService<Setmeal> {
      * 删除套餐，同时需要删除套餐和菜品的关联数据
      * @param ids
      */
-    public void removeWithDish(List<Long> ids);
+     void removeWithDish(List<Long> ids);
+
+
+    /**
+     * 修改套餐,同时需要修改套餐和菜品的关联数据
+     */
+    void updateWithDish(SetmealDto setmealDto);
+
+    /**
+     * 查询套餐,同时需要查询套餐和菜品关联数据
+     * @param id
+     * @return
+     */
+    Setmeal getWithDish(Long id);
 }

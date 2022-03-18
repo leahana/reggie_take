@@ -1,6 +1,7 @@
 package com.itheima.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.itheima.entity.Dish;
 import com.itheima.entity.DishDto;
@@ -133,4 +134,47 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish>
         //dish_flavor表的insert操作
         dishFlavorService.saveBatch(list);
     }
+
+
+    @Override
+    public boolean updateStatus(Integer status, List<Long> ids) {
+
+        //条件查询器
+        LambdaUpdateWrapper<Dish> luw = new LambdaUpdateWrapper();
+        luw.in(Dish::getId, ids).set(Dish::getStatus, status);
+
+        boolean flag = this.update(luw);
+
+        return flag;
+
+    }
+
+
+    @Override
+    public boolean deleteWithFlavor(List<Long> ids) {
+
+        //根据条件删除dish_flavor表的口味数据
+        //初始化条件更新器(逻辑删除菜品口味
+        LambdaUpdateWrapper<DishFlavor> luwDF = new LambdaUpdateWrapper();
+
+        //设置更新条件--in (ids).set(逻辑删除字段,1)
+        luwDF.in(DishFlavor::getDishId, ids).set(DishFlavor::getIsDeleted, 1);
+
+        //逻辑删除菜品口味
+        dishFlavorService.update(luwDF);
+
+        //逻辑删除菜品
+        LambdaUpdateWrapper<Dish> luwD = new LambdaUpdateWrapper();
+
+        //设置更新条件--in (ids).set(逻辑删除字段,1)
+        luwD.in(Dish::getId, ids).set(Dish::getIsDeleted, 1);
+
+        //逻辑删除菜品
+        boolean flag = this.update(luwD);
+
+        //添加提交过来的Flavor数据
+
+        return flag;
+    }
+
 }

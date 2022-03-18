@@ -52,7 +52,7 @@ public class SetmealController {
     public R<Setmeal> getById(@PathVariable Long id){
 
 
-        Setmeal Setmeal = setmealService.getById(id);
+        Setmeal Setmeal = setmealService.getWithDish(id);
 
 
         return R.success(Setmeal);

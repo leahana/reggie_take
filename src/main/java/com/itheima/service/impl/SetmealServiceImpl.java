@@ -88,4 +88,27 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impl
         //删除关系 setmeal_dish表中的数据
         setmealDishService.remove(qw);
     }
+
+    @Override
+    public void updateWithDish(SetmealDto setmealDto) {
+
+    }
+
+    @Override
+    public SetmealDto getWithDish(Long id) {
+
+        //本类getById(从ServiceImpl继承来的
+        Setmeal setmeal = this.getById(id);
+
+        //初始化条件查询器
+        LambdaQueryWrapper<Setmeal> lqw = new LambdaQueryWrapper<>();
+
+        //添加id条件
+        lqw.eq(Setmeal::getId, id);
+
+        //添加状态条件
+        lqw.eq(Setmeal::getStatus, 1);
+
+        return null;
+    }
 }

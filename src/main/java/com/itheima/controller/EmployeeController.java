@@ -5,12 +5,13 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.itheima.common.R;
 import com.itheima.entity.Employee;
 import com.itheima.service.EmployeeService;
-import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 
 
@@ -43,6 +44,7 @@ public class EmployeeController {
     public R<Employee> login(HttpServletRequest request, @RequestBody Employee employee) {
 
         System.out.println(employee);
+
         //1 将前端提交的代码进行md5加密
         String password = employee.getPassword();
         password = DigestUtils.md5DigestAsHex(password.getBytes());
