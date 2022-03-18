@@ -151,7 +151,7 @@ public class DishController {
         LambdaQueryWrapper<Dish> lqw = new LambdaQueryWrapper<>();
 
         //设置条件(菜品种类id
-        lqw.eq(categoryId != null, Dish::getCategoryId, 1);
+        lqw.eq(categoryId != null, Dish::getCategoryId, categoryId);
 
 
         //因为逻辑删除所以添加了添加了条件

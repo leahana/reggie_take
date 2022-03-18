@@ -39,14 +39,14 @@ public class SetmealController {
     private CategoryService categoryService;
 
 
-
     /**
      * 根据id查询
+     *
      * @return
      */
     //整不明白
     @GetMapping("/{id}")
-    public R<SetmealDto> getById(@PathVariable Long id){
+    public R<SetmealDto> getById(@PathVariable Long id) {
 
 
         SetmealDto setmealDto = setmealService.getWithDish(id);
@@ -58,9 +58,6 @@ public class SetmealController {
     }
 
 
-
-
-
     /**
      * 根据条件查询套餐数据
      *
@@ -68,21 +65,22 @@ public class SetmealController {
      * @return
      */
     @GetMapping("/list")
-    public R<List<Setmeal>> list(@RequestParam Long categoryId) {
+    public R<List<Setmeal>> list(Setmeal setmeal) {
         //条件查询器
         LambdaQueryWrapper<Setmeal> lqw = new LambdaQueryWrapper<>();
 
         //设置查询条件--categoryId
-        lqw.eq(categoryId != null, Setmeal::getCategoryId, categoryId);
+        lqw.eq(setmeal.getCategoryId() != null, Setmeal::getCategoryId, setmeal.getCategoryId());
 
         //设置查询条件--status
-        lqw.eq( Setmeal::getStatus, 1);
+        lqw.eq(Setmeal::getStatus, setmeal.getStatus());
 
         //设置排序条件--根据更新时间降序
         lqw.orderByDesc(Setmeal::getUpdateTime);
 
         //查询
         List<Setmeal> list = setmealService.list(lqw);
+
 
         return R.success(list);
     }
@@ -161,7 +159,6 @@ public class SetmealController {
 
         return R.success(dtoPage);
     }
-
 
 
     /**

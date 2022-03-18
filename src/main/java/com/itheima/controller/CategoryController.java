@@ -108,7 +108,7 @@ public class CategoryController {
      * @return
      */
     @GetMapping("/list")
-    public R<List<Category>> getList(@RequestParam Integer type) {
+    public R<List<Category>> getList(Integer type) {
         //条件构造器
         LambdaQueryWrapper<Category> lqw = new LambdaQueryWrapper<>();
 
@@ -123,6 +123,7 @@ public class CategoryController {
         //查询集合(条件)
         List<Category> list = categoryService.list(lqw);
 
+        //System.out.println(list);
         return R.success(list);
     }
 }
