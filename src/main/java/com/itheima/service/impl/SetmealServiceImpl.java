@@ -1,6 +1,7 @@
 package com.itheima.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.itheima.common.CustomException;
 import com.itheima.entity.Category;
@@ -64,6 +65,7 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impl
 
     }
 
+
     /**
      * 删除 同时删除套餐和菜品关联数据
      *
@@ -101,7 +103,6 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impl
         //删除关系 setmeal_dish表中的数据
         setmealDishService.remove(qw);
     }
-
 
 
     /**
@@ -162,16 +163,16 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impl
     public boolean updateWithDish(SetmealDto setmealDto) {
     /*
 SetmealDto(
-SetmealDishes=[
-SetmealDish(
-id=null,
-setmealId=null,
-dishId=1397851668262465537,
-name=口味蛇,
-price=16800,
+
+
+SetmealDishes=[SetmealDish(id=null,setmealId=null,dishId=1397851668262465537,name=口味蛇,price=16800,
 copies=1,
 sort=null,
 createTime=null, updateTime=null, createUser=null,updateUser=null, isDeleted=null)],
+
+
+
+
  categoryName=商务套餐)
  */
         Long setmealId = this.setmealDto.getId();
@@ -187,7 +188,7 @@ createTime=null, updateTime=null, createUser=null,updateUser=null, isDeleted=nul
 
         this.removeById(setmealId);
 
-        BeanUtils.copyProperties(setmealDto,this.setmealDto);
+        BeanUtils.copyProperties(setmealDto, this.setmealDto);
 
 
         this.saveWithDish(this.setmealDto);
@@ -285,5 +286,39 @@ createTime=null, updateTime=null, createUser=null,updateUser=null, isDeleted=nul
 
 
         return true;
+    }
+
+
+    @Override
+    public boolean updateWithDishV2(SetmealDto setmealDto) {
+
+
+
+        Long setmealId = setmealDto.getId();
+
+        LambdaQueryWrapper<SetmealDish> qw = new LambdaQueryWrapper<>();
+        //添加条件
+        qw.eq(SetmealDish::getSetmealId, setmealId);
+
+        //删除关系 setmeal_dish表中关联setmeal表主键的菜品
+        setmealDishService.remove(qw);
+
+        List<SetmealDish> setmealDishes = setmealDto.getSetmealDishes();
+        log.error(setmealId.toString());
+        log.error(setmealDishes.toString());
+        setmealDishes = setmealDishes.stream().peek((emp) -> emp.setSetmealId(setmealId)).collect(Collectors.toList());
+        log.error(setmealDishes.toString());
+
+        setmealDishService.saveBatch(setmealDishes);
+
+
+        LambdaUpdateWrapper<Setmeal> luwS = new LambdaUpdateWrapper<>();
+
+        luwS.eq(Setmeal::getId, setmealId);
+
+        this.update(setmealDto, luwS);
+
+        return true;
+
     }
 }

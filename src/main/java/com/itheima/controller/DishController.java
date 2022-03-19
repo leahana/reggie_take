@@ -393,6 +393,12 @@ public class DishController {
     }
 
 
+
+
+
+
+
+
     /**
      * 修改菜品(包括口味
      *
@@ -416,22 +422,6 @@ public class DishController {
 
 
     /**
-     * 批量逻辑删除
-     * 删除菜品/批量删除菜品
-     *
-     * @param ids
-     * @return
-     */
-    @DeleteMapping
-    public R<String> deleteIds(@RequestParam List<Long> ids) {
-
-        dishService.deleteWithFlavor(ids);
-
-        return R.success("删除成功");
-    }
-
-
-    /**
      * 批量修改状态
      *
      * @param status
@@ -445,6 +435,21 @@ public class DishController {
         dishService.updateStatus(status, ids);
 
         return R.success("操作成功");
+    }
+
+    /**
+     * 批量逻辑删除
+     * 删除菜品/批量删除菜品
+     *
+     * @param ids
+     * @return
+     */
+    @DeleteMapping
+    public R<String> deleteIds(@RequestParam List<Long> ids) {
+
+        dishService.deleteWithFlavor(ids);
+
+        return R.success("删除成功");
     }
 
 }

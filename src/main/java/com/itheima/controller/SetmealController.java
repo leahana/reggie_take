@@ -42,6 +42,28 @@ public class SetmealController {
     private CategoryService categoryService;
 
 
+    /**
+     * 更新套餐 包括套餐内容
+     *
+     * @param
+     * @return
+     */
+    @PutMapping
+    public R<String> updateSetmeal(@RequestBody SetmealDto setmealDto) {
+        //v1
+        //boolean flag = setmealService.updateWithDish(setmealDto);
+
+
+        //v2
+        boolean flag=setmealService.updateWithDishV2(setmealDto);
+        //log.error(setmealDto.toString());
+
+        if (flag) {
+            return R.success("修改成功");
+        } else {
+            return R.error("请稍后再试");
+        }
+    }
 
 
     /**
@@ -53,9 +75,7 @@ public class SetmealController {
     public R<SetmealDto> getById(@PathVariable Long id) {
 
 
-
         SetmealDto setmealDto = setmealService.getWithDish(id);
-
 
 
         return R.success(setmealDto);
@@ -80,6 +100,7 @@ public class SetmealController {
 
         //设置查询条件--status
         lqw.eq(Setmeal::getStatus, setmeal.getStatus());
+
 
         //设置排序条件--根据更新时间降序
         lqw.orderByDesc(Setmeal::getUpdateTime);
@@ -184,26 +205,4 @@ public class SetmealController {
     }
 
 
-    /**
-     * 更新套餐 包括套餐内容
-     *
-     * @param
-     * @return
-     */
-    @PutMapping
-    public R<String> updateSetmeal(@RequestBody SetmealDto setmealDto) {
-
-
-        //log.error(setmealDto.toString());
-
-
-        boolean flag = setmealService.updateWithDish(setmealDto);
-
-        System.out.println();
-        if (true) {
-            return R.success("修改成功");
-        } else {
-            return R.error("请稍后再试");
-        }
-    }
 }

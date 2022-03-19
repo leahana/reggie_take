@@ -38,5 +38,6 @@ public interface SetmealService extends IService<Setmeal> {
      */
     SetmealDto getWithDish(Long id);
 
+     boolean updateWithDishV2(SetmealDto setmealDto);
 
 }

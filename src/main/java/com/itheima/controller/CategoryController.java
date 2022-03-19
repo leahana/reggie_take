@@ -38,7 +38,6 @@ public class CategoryController {
 
     }
 
-
     /**
      * 分页查询
      *
@@ -124,6 +123,7 @@ public class CategoryController {
         List<Category> list = categoryService.list(lqw);
 
         //System.out.println(list);
+
         return R.success(list);
     }
 }
