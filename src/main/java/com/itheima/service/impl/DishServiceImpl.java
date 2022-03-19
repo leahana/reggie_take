@@ -23,7 +23,6 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish>
         implements DishService {
 
 
-
     //菜品口味service
     @Autowired
     private DishFlavorService dishFlavorService;
@@ -34,7 +33,6 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish>
 ③. 获取菜品口味列表，遍历列表，为菜品口味对象属性dishId赋值;
 ④. 批量保存菜品口味列表;
      */
-
 
 
     /**
@@ -66,9 +64,9 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish>
         }*/
 
 
-        flavors.stream().map((item) -> {
+        //把口味缺少的dishId set进去
+        flavors.stream().peek((item) -> {
             item.setDishId(dishDtoId);
-            return item;
         }).collect(Collectors.toList());
 
 
@@ -76,8 +74,6 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish>
         dishFlavorService.saveBatch(flavors);
 
     }
-
-
 
 
     /**
@@ -101,7 +97,8 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish>
         LambdaQueryWrapper<DishFlavor> lqw = new LambdaQueryWrapper<>();
 
         //设定查询条件
-        lqw.eq(dish.getId() != null, DishFlavor::getId, dish.getId());
+        lqw.eq(dish.getId() != null, DishFlavor::getId, dish.getId()).eq(DishFlavor::getIsDeleted, 0);
+
         List<DishFlavor> list = dishFlavorService.list(lqw);
         dishDto.setFlavors(list);
 
@@ -110,21 +107,24 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish>
     }
 
 
-
-
     /**
      * 更新菜品包括口味id
+     *
      * @param dishDto
      */
     @Override
     public void updateWithFlavor(DishDto dishDto) {
+
         //更新 dish表的基本信息 调用本类update方法
         this.updateById(dishDto);
+
+        //获取DishId
+        Long dishId = dishDto.getId();
 
         //清理当前菜品口味数据--删除dish_flavor表的数据
         //设置删除条件器
         LambdaQueryWrapper<DishFlavor> lqw = new LambdaQueryWrapper<>();
-        lqw.eq(dishDto.getId() != null, DishFlavor::getDishId, dishDto.getId());
+        lqw.eq(dishId != null, DishFlavor::getDishId, dishId);
 
         //根据条件删除dish_flavor表的口味数据
         dishFlavorService.remove(lqw);
@@ -132,15 +132,11 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish>
         //添加提交过来的Flavor数据
         List<DishFlavor> list = dishDto.getFlavors();
 
-        list = list.stream().map((item) -> {
-            //菜品口味表:dish_flavor中 dish_id关联了菜品id
-
+        //菜品口味表:dish_flavor中 dish_id关联了菜品id
+        list = list.stream().peek((item) -> {
             //获取list集合中每一个DishFlavor对象的id属性
-            Long id = item.getId();
-            //绑定菜品id是这个菜的口味
-            item.setDishId(id);
-
-            return item;
+            //给这个口味绑定这个菜品的Id(
+            item.setDishId(dishId);
         }).collect(Collectors.toList());
 
         //dish_flavor表的insert操作
@@ -148,10 +144,9 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish>
     }
 
 
-
-
     /**
      * 更新菜品状态/批量更新菜品状态
+     *
      * @param status
      * @param ids
      * @return
@@ -170,10 +165,9 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish>
     }
 
 
-
-
     /**
      * 删除菜品/批量删除菜品(逻辑删除
+     *
      * @param ids
      * @return
      */
@@ -200,7 +194,6 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish>
         boolean flag = this.update(luwD);
 
         //添加提交过来的Flavor数据
-
         return flag;
     }
 

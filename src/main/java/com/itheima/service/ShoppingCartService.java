@@ -9,7 +9,7 @@ public interface ShoppingCartService extends IService<ShoppingCart> {
 
     /**
      * 减少购物车
-     * @param d
+     * @param
      * @param
      */
     boolean deleteDishOrSetmeal(Map<String,Long> map);

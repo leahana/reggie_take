@@ -16,7 +16,7 @@ public class ShoppingCartServiceImpl extends ServiceImpl<ShoppingCartMapper, Sho
         implements ShoppingCartService {
 
     @Override
-    public boolean deleteDishOrSetmeal(Map<String,Long> map) {
+    public boolean deleteDishOrSetmeal(Map<String, Long> map) {
 
         Long userId = BaseContext.getCurrentId();
         Long dishId = map.get("dishId");
@@ -25,19 +25,25 @@ public class ShoppingCartServiceImpl extends ServiceImpl<ShoppingCartMapper, Sho
 
         //条件更新器
         LambdaUpdateWrapper<ShoppingCart> luw = new LambdaUpdateWrapper<>();
+        int num;
+        lqw.eq(ShoppingCart::getUserId, userId);
 
         if (dishId != null) {
             //添加的是菜品
             //先获取库存,之后再利用redis缓存处理库存
-            lqw.eq(ShoppingCart::getUserId, userId).eq(ShoppingCart::getDishId, dishId);
+            lqw.eq(ShoppingCart::getDishId, dishId);
             ShoppingCart one = this.getOne(lqw);
-            luw.eq(ShoppingCart::getDishId, dishId).set(ShoppingCart::getNumber, one.getNumber() - 1);
+            num = one.getNumber() - 1;
+            if (num < 0) return false;
+            luw.eq(ShoppingCart::getDishId, dishId).set(ShoppingCart::getNumber, num);
         } else {
             Long setmealId = map.get("setmealId");
             //添加的是套餐
-            lqw.eq(ShoppingCart::getUserId, userId).eq(ShoppingCart::getSetmealId, setmealId);
+            lqw.eq(ShoppingCart::getSetmealId, setmealId);
             ShoppingCart one = this.getOne(lqw);
-            luw.eq(ShoppingCart::getSetmealId, setmealId).set(ShoppingCart::getNumber, one.getNumber() - 1);
+            num = one.getNumber() - 1;
+            if (num < 0) return false;
+            luw.eq(ShoppingCart::getSetmealId, setmealId).set(ShoppingCart::getNumber, num);
         }
 
 

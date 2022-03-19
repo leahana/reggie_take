@@ -5,16 +5,17 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.itheima.common.R;
 import com.itheima.entity.User;
 import com.itheima.service.UserService;
-import com.itheima.utils.SMSUtils;
 import com.itheima.utils.ValidateCodeUtils;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpSession;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -108,6 +109,7 @@ public class UserController {
             //说明是新用户 ,自动完成注册
             if (user == null) {
                 user = new User();
+                user.setName("测试用户");
                 user.setPhone(phone);
                 user.setStatus(1);
                 userService.save(user);

@@ -25,9 +25,12 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/setmeal")
 public class SetmealController {
+
+
     //套餐service
     @Autowired
     private SetmealService setmealService;
+
 
     //套餐菜品service
     @Autowired
@@ -39,17 +42,20 @@ public class SetmealController {
     private CategoryService categoryService;
 
 
+
+
     /**
      * 根据id查询
      *
      * @return
      */
-    //整不明白
     @GetMapping("/{id}")
     public R<SetmealDto> getById(@PathVariable Long id) {
 
 
+
         SetmealDto setmealDto = setmealService.getWithDish(id);
+
 
 
         return R.success(setmealDto);
@@ -178,4 +184,26 @@ public class SetmealController {
     }
 
 
+    /**
+     * 更新套餐 包括套餐内容
+     *
+     * @param
+     * @return
+     */
+    @PutMapping
+    public R<String> updateSetmeal(@RequestBody SetmealDto setmealDto) {
+
+
+        //log.error(setmealDto.toString());
+
+
+        boolean flag = setmealService.updateWithDish(setmealDto);
+
+        System.out.println();
+        if (true) {
+            return R.success("修改成功");
+        } else {
+            return R.error("请稍后再试");
+        }
+    }
 }

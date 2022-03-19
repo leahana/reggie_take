@@ -148,10 +148,10 @@ public class ShoppingCartController {
         //log.error(map.toString());
 
 
-        shoppingCartService.deleteDishOrSetmeal(map);
+        boolean flag = shoppingCartService.deleteDishOrSetmeal(map);
 
-
-        return R.success("移除成功");
+        if (flag) return R.success("移除成功");
+        else return R.error("购物车数量不能小于0");
     }
 
 }
