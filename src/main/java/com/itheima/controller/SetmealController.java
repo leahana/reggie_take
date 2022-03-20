@@ -69,7 +69,7 @@ public class SetmealController {
 
 
     @PostMapping("/status/{status}")
-    public R<String> updateStatus(@PathVariable Integer status,
+    public R<String> updateSetmealStatus(@PathVariable Integer status,
                                   @RequestParam List<Long> ids) {
 
         setmealService.updateStatus(status, ids);
@@ -83,7 +83,7 @@ public class SetmealController {
      * @return
      */
     @GetMapping("/{id}")
-    public R<SetmealDto> getById(@PathVariable Long id) {
+    public R<SetmealDto> querySetmeal(@PathVariable Long id) {
 
 
         SetmealDto setmealDto = setmealService.getWithDish(id);
@@ -94,7 +94,7 @@ public class SetmealController {
 
     }
 
-    
+
     /**
      * 根据条件查询套餐数据
      *
@@ -103,7 +103,7 @@ public class SetmealController {
      */
     @GetMapping("/list")
     @Cacheable(value = "setmealCache", key = "#setmeal.categoryId+'_'+#setmeal.status")
-    public R<List<Setmeal>> list(Setmeal setmeal) {
+    public R<List<Setmeal>> querySetmeals(Setmeal setmeal) {
         //条件查询器
         LambdaQueryWrapper<Setmeal> lqw = new LambdaQueryWrapper<>();
 
@@ -132,7 +132,7 @@ public class SetmealController {
      * @return
      */
     @PostMapping
-    public R<String> save(@RequestBody SetmealDto setmealDto) {
+    public R<String> saveSetmeal(@RequestBody SetmealDto setmealDto) {
         //记录日志
         log.info("套餐信息:{}", setmealDto);
 
@@ -151,7 +151,7 @@ public class SetmealController {
      * @return
      */
     @GetMapping("/page")
-    public R<Page> page(int page, int pageSize, String name) {
+    public R<Page> pageSetmeals(int page, int pageSize, String name) {
         //初始化分页构造器对象
         Page<Setmeal> iPage = new Page<>(page, pageSize);
 
@@ -208,7 +208,7 @@ public class SetmealController {
      */
     @DeleteMapping
     @CacheEvict(value = "setmealCache", allEntries = true)//清楚setmealCache名称下所有的缓存数据
-    public R<String> delete(@RequestParam List<Long> ids) {
+    public R<String> deleteSetmeals(@RequestParam List<Long> ids) {
         //记录日志
         log.info("准备删除 id:{}", ids);
 

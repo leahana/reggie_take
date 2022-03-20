@@ -102,7 +102,7 @@ public class EmployeeController {
      * @return
      */
     @PostMapping
-    public R<String> save( @RequestBody Employee employee) {
+    public R<String> saveEmployee( @RequestBody Employee employee) {
 
         //记录日志
         log.info("新增员工,员工信息:{}", employee.toString());
@@ -137,7 +137,7 @@ public class EmployeeController {
      * @return
      */
     @GetMapping("/page")
-    public R<Page> page(int page, int pageSize, String name) {
+    public R<Page> pageEmployees(int page, int pageSize, String name) {
         //记录日志
         log.info("page={},pageSize={},name={}", page, pageSize, name);
 
@@ -169,7 +169,7 @@ public class EmployeeController {
      * @return
      */
     @PutMapping
-    public R<String> update(HttpServletRequest request, @RequestBody Employee employee) {
+    public R<String> updateEmployee(HttpServletRequest request, @RequestBody Employee employee) {
         //记录日志
         log.info(employee.toString());
         // long empId = (long) request.getSession().getAttribute("employee");
@@ -198,7 +198,7 @@ public class EmployeeController {
      * @return
      */
     @GetMapping("/{id}")
-    public R<Employee> getById(@PathVariable long id) {
+    public R<Employee> queryEmployee(@PathVariable long id) {
         log.info("根据id查询员工信息...");
         Employee employee = employeeService.getById(id);
         if (employee != null) return R.success(employee);

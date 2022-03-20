@@ -9,7 +9,6 @@ import com.itheima.entity.AddressBook;
 import com.itheima.service.AddressBookService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -38,7 +37,7 @@ public class AddressBookController {
      * 新增地址
      */
     @PostMapping
-    public R<AddressBook> save(@RequestBody AddressBook addressBook) {
+    public R<AddressBook> saveAddressBook(@RequestBody AddressBook addressBook) {
         //返回当前线程所对应的线程局部变量的值,过滤器中设置set过了
         addressBook.setUserId(BaseContext.getCurrentId());
 
@@ -57,7 +56,7 @@ public class AddressBookController {
      * 设置默认地址
      */
     @PutMapping("default")
-    public R<AddressBook> setDefault(@RequestBody AddressBook addressBook) {
+    public R<AddressBook> setDefaultAddressBook(@RequestBody AddressBook addressBook) {
         //记录日志
         log.info("addressBook:{}", addressBook);
 
@@ -93,7 +92,7 @@ public class AddressBookController {
      * 根据id查询地址
      */
     @GetMapping("/{id}")
-    public R get(@PathVariable Long id) {
+    public R queryAddressBook(@PathVariable Long id) {
         //根据id查询
         AddressBook addressBook = addressBookService.getById(id);
 
@@ -111,7 +110,7 @@ public class AddressBookController {
      * 查询默认地址
      */
     @GetMapping("default")
-    public R<AddressBook> getDefault() {
+    public R<AddressBook> queryDefaultAddressBook() {
 
         //条件查询器
         LambdaUpdateWrapper<AddressBook> lqw = new LambdaUpdateWrapper<>();
@@ -139,7 +138,7 @@ public class AddressBookController {
      * 查询指定用户的全部地址
      */
     @GetMapping("/list")
-    public R<List<AddressBook>> list(AddressBook addressBook) {
+    public R<List<AddressBook>> queryAddressBooks(AddressBook addressBook) {
         //===========================================
         //根据从线程局部对象中取出id,给userid进行设置
 

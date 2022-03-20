@@ -35,7 +35,7 @@ public class ShoppingCartController {
      * @return
      */
     @PostMapping("/add")
-    public R<ShoppingCart> add(@RequestBody ShoppingCart shoppingCart) {
+    public R<ShoppingCart> saveShoppingCart(@RequestBody ShoppingCart shoppingCart) {
 //        菜品数据:dishId
 //        {"amount":118,"dishFlavor":"不要蒜,微辣","dishId":"1397851099502260226",
 //        "name":"全家福","image":"a53a4e6a-3b83-4044-87f9-9d49b30a8fdc.jpg"}
@@ -100,7 +100,7 @@ public class ShoppingCartController {
      * @return
      */
     @GetMapping("/list")
-    public R<List<ShoppingCart>> list() {
+    public R<List<ShoppingCart>> queryShoppingCarts() {
         //记录日志
         log.info("查看购物车");
 
@@ -126,7 +126,7 @@ public class ShoppingCartController {
      * @return
      */
     @DeleteMapping("/clean")
-    public R<String> clean() {
+    public R<String> deleteShoppingCart() {
         //条件查询器
         LambdaQueryWrapper<ShoppingCart> lqw = new LambdaQueryWrapper<>();
 
@@ -141,7 +141,7 @@ public class ShoppingCartController {
 
 
     @PostMapping("/sub")
-    public R<String> sub(@RequestBody Map<String, Long> map) {
+    public R<String> subShoppingCart(@RequestBody Map<String, Long> map) {
 
 
         //log.error(map.toString());

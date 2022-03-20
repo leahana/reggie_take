@@ -121,7 +121,7 @@ public class DishController {
      * @return
      */
     @GetMapping("/list")
-    public R<List<DishDto>> list(@RequestParam Long categoryId) {
+    public R<List<DishDto>> queryDishes(@RequestParam Long categoryId) {
 
 //        1). 改造DishController的list方法，先从Redis中获取分类对应的菜品数据，如果有则直接返回，无需查询数据库;
 //            如果没有则查询数据库，并将查询到的菜品数据存入Redis。
@@ -223,7 +223,7 @@ public class DishController {
      * @return
      */
     @PostMapping
-    public R<String> save(@RequestBody DishDto dishDto) {
+    public R<String> saveDish(@RequestBody DishDto dishDto) {
         //记录日志
         log.info("新增菜品:{}", dishDto.toString());
 
@@ -309,7 +309,7 @@ public class DishController {
 
     }*/
     @GetMapping("/page")
-    public R<Map> getAll(int page, int pageSize, String name) {
+    public R<Map> pageDishes(int page, int pageSize, String name) {
         //记录日志
         log.info("page={},pageSize={},name={}", page, pageSize, name);
 
@@ -379,7 +379,6 @@ public class DishController {
 
 
 
-
     /**
      * 根据id查询菜品信息和对应的口味信息
      *
@@ -387,14 +386,10 @@ public class DishController {
      * @return
      */
     @GetMapping("/{id}")
-    public R<DishDto> getById(@PathVariable Long id) {
+    public R<DishDto> queryDish(@PathVariable Long id) {
         DishDto dishDto = dishService.getByIdWithFlavor(id);
         return R.success(dishDto);
     }
-
-
-
-
 
 
 
@@ -406,7 +401,7 @@ public class DishController {
      * @return
      */
     @PutMapping
-    public R<String> update(@RequestBody DishDto dishDto) {
+    public R<String> updateDish(@RequestBody DishDto dishDto) {
         //记录日志
         log.info("更新菜品:{}", dishDto.toString());
 
@@ -429,7 +424,7 @@ public class DishController {
      * @return R
      */
     @PostMapping("/status/{status}")
-    public R<String> updateStatus(@PathVariable Integer status,
+    public R<String> updateDishStatus(@PathVariable Integer status,
                                   @RequestParam List<Long> ids) {
 
         dishService.updateStatus(status, ids);
@@ -445,7 +440,7 @@ public class DishController {
      * @return
      */
     @DeleteMapping
-    public R<String> deleteIds(@RequestParam List<Long> ids) {
+    public R<String> deleteSetmeals(@RequestParam List<Long> ids) {
 
         dishService.deleteWithFlavor(ids);
 

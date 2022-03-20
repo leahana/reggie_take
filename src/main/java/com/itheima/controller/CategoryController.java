@@ -28,7 +28,7 @@ public class CategoryController {
      * @return R<String>
      */
     @PostMapping
-    public R<String> save(@RequestBody Category category) {
+    public R<String> saveCategory(@RequestBody Category category) {
         //记录日志
         log.info("category:{}", category);
 
@@ -46,7 +46,7 @@ public class CategoryController {
      * @return
      */
     @GetMapping("/page")
-    public R<Page> page(int page, int pageSize) {
+    public R<Page> pageCategories(int page, int pageSize) {
         //分页构造器
         Page<Category> iPage = new Page<>(page, pageSize);
 
@@ -71,7 +71,7 @@ public class CategoryController {
      * @return R<String>
      */
     @DeleteMapping
-    public R<String> deleteById(Long id) {
+    public R<String> deleteCategory(Long id) {
         //记录日志
         log.info("删除分类,id为:{}", id);
 
@@ -90,7 +90,7 @@ public class CategoryController {
      * @return
      */
     @PutMapping
-    public R<String> update(@RequestBody Category category) {
+    public R<String> updateCategory(@RequestBody Category category) {
         //记录日志
         log.info("修改分类信息:{}", category);
 
@@ -107,7 +107,7 @@ public class CategoryController {
      * @return
      */
     @GetMapping("/list")
-    public R<List<Category>> getList(Integer type) {
+    public R<List<Category>> queryCategories(Integer type) {
         //条件构造器
         LambdaQueryWrapper<Category> lqw = new LambdaQueryWrapper<>();
 
