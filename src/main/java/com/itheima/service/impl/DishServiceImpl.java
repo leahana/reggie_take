@@ -82,7 +82,7 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish>
      * @param id
      */
     @Override
-    public DishDto getByIdWithFlavor(Long id) {
+    public DishDto queryWithFlavorById(Long id) {
         //本类getById(从ServiceImpl继承来的
         Dish dish = this.getById(id);
 
@@ -152,7 +152,7 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish>
      * @return
      */
     @Override
-    public boolean updateStatus(Integer status, List<Long> ids) {
+    public boolean updateStatusByIds(Integer status, List<Long> ids) {
 
         //条件查询器
         LambdaUpdateWrapper<Dish> luw = new LambdaUpdateWrapper();
@@ -172,7 +172,7 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish>
      * @return
      */
     @Override
-    public boolean deleteWithFlavor(List<Long> ids) {
+    public boolean deleteWithFlavorByIds(List<Long> ids) {
 
         //根据条件删除dish_flavor表的口味数据
         //初始化条件更新器(逻辑删除菜品口味

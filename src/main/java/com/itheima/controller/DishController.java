@@ -387,7 +387,7 @@ public class DishController {
      */
     @GetMapping("/{id}")
     public R<DishDto> queryDish(@PathVariable Long id) {
-        DishDto dishDto = dishService.getByIdWithFlavor(id);
+        DishDto dishDto = dishService.queryWithFlavorById(id);
         return R.success(dishDto);
     }
 
@@ -427,7 +427,7 @@ public class DishController {
     public R<String> updateDishStatus(@PathVariable Integer status,
                                   @RequestParam List<Long> ids) {
 
-        dishService.updateStatus(status, ids);
+        dishService.updateStatusByIds(status, ids);
 
         return R.success("操作成功");
     }
@@ -442,7 +442,7 @@ public class DishController {
     @DeleteMapping
     public R<String> deleteSetmeals(@RequestParam List<Long> ids) {
 
-        dishService.deleteWithFlavor(ids);
+        dishService.deleteWithFlavorByIds(ids);
 
         return R.success("删除成功");
     }

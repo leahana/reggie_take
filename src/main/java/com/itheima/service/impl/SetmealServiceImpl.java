@@ -4,10 +4,12 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.itheima.common.CustomException;
-import com.itheima.entity.*;
+import com.itheima.entity.Category;
+import com.itheima.entity.Setmeal;
+import com.itheima.entity.SetmealDish;
+import com.itheima.entity.SetmealDto;
 import com.itheima.mapper.SetmealMapper;
 import com.itheima.service.CategoryService;
-import com.itheima.service.DishService;
 import com.itheima.service.SetmealDishService;
 import com.itheima.service.SetmealService;
 import org.springframework.beans.BeanUtils;
@@ -28,11 +30,6 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impl
     @Autowired
     private CategoryService categoryService;
 
-
-    @Autowired
-    private DishService dishService;
-
-
     private SetmealDto setmealDto;
 
     /**
@@ -45,7 +42,7 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impl
         //保存套餐的基本信息,操作setmeal库
         this.save(setmealDto);
         List<SetmealDish> setmealDishes = setmealDto.getSetmealDishes();
-//======================================================================================//
+
         setmealDishes = setmealDishes.stream().peek((item) -> {
             //setmeal_dish的SetmealId关联了套餐表主键id
             //获取list集合中每一个setmealDto对象的id属性
@@ -61,7 +58,6 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impl
         setmealDishService.saveBatch(setmealDishes);
 
     }
-
 
     /**
      * 删除 同时删除套餐和菜品关联数据
@@ -109,7 +105,7 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impl
      * @return
      */
     @Override
-    public SetmealDto getWithDish(Long id) {
+    public SetmealDto queryWithDish(Long id) {
 
         //setmealid
         //本类getById(从ServiceImpl继承来的
@@ -140,22 +136,11 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impl
     }
 
 
-//  {id=1503791759585292290,
-//  categoryId=1413342269393674242,
-//  name=商务套餐,
-//  price=12100,
-//  status=1,
-//  code=,
-//  description=111,
-//  image=0d5c0e2b-b0d0-455c-b6d7-92034d9221d5.png,
-//  createTime=2022-03-16 01:54:29,
-//  createUser=1,
-//  updateUser=1,
-//  categoryName=商务套餐,
-//  setmealDishes=[{copies=1, dishId=1397851668262465537, name=口味蛇, price=16800},
-//  {copies=1, dishId=1397851370462687234, name=邵阳猪血丸子, price=13800}],
-//  idType=1413342269393674242}
-
+    /**
+     * 更新套餐包括套餐菜品
+     * @param setmealDto
+     * @return
+     */
     @Override
     public boolean updateWithDish(SetmealDto setmealDto) {
     /*
@@ -285,7 +270,11 @@ createTime=null, updateTime=null, createUser=null,updateUser=null, isDeleted=nul
         return true;
     }
 
-
+    /**
+     * 更新套餐包括套餐菜品v2
+     * @param setmealDto
+     * @return
+     */
     @Override
     public boolean updateWithDishV2(SetmealDto setmealDto) {
 
@@ -319,8 +308,14 @@ createTime=null, updateTime=null, createUser=null,updateUser=null, isDeleted=nul
 
     }
 
+    /**
+     * 更新套餐状态
+     * @param status
+     * @param ids
+     * @return
+     */
     @Override
-    public boolean updateStatus(Integer status, List<Long> ids) {
+    public boolean updateStatusByIds(Integer status, List<Long> ids) {
         //条件查询器
         LambdaUpdateWrapper<Setmeal> luw = new LambdaUpdateWrapper();
         luw.in(Setmeal::getId, ids).set(Setmeal::getStatus, status);

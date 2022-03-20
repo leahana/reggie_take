@@ -6,6 +6,7 @@ import com.itheima.entity.SetmealDto;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
 @Transactional
 public interface SetmealService extends IService<Setmeal> {
 
@@ -32,14 +33,19 @@ public interface SetmealService extends IService<Setmeal> {
 
 
     /**
+     * 修改套餐,同时需要修改套餐和菜品的关联数据v2
+     */
+    boolean updateWithDishV2(SetmealDto setmealDto);
+
+
+    /**
      * 查询套餐,同时需要查询套餐和菜品关联数据
      *
      * @param id
      * @return
      */
-    SetmealDto getWithDish(Long id);
+    SetmealDto queryWithDish(Long id);
 
-     boolean updateWithDishV2(SetmealDto setmealDto);
 
-    boolean updateStatus(Integer status, List<Long> ids);
+    boolean updateStatusByIds(Integer status, List<Long> ids);
 }

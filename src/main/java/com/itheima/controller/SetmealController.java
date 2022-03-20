@@ -68,11 +68,17 @@ public class SetmealController {
     }
 
 
+    /**
+     * 修改套餐状态
+     * @param status
+     * @param ids
+     * @return
+     */
     @PostMapping("/status/{status}")
     public R<String> updateSetmealStatus(@PathVariable Integer status,
                                   @RequestParam List<Long> ids) {
 
-        setmealService.updateStatus(status, ids);
+        setmealService.updateStatusByIds(status, ids);
 
         return R.success("修改状态成功");
     }
@@ -86,7 +92,7 @@ public class SetmealController {
     public R<SetmealDto> querySetmeal(@PathVariable Long id) {
 
 
-        SetmealDto setmealDto = setmealService.getWithDish(id);
+        SetmealDto setmealDto = setmealService.queryWithDish(id);
 
 
         return R.success(setmealDto);
@@ -112,7 +118,6 @@ public class SetmealController {
 
         //设置查询条件--status
         lqw.eq(Setmeal::getStatus, setmeal.getStatus());
-
 
         //设置排序条件--根据更新时间降序
         lqw.orderByDesc(Setmeal::getUpdateTime);

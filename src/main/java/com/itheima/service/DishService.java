@@ -18,7 +18,7 @@ public interface DishService extends IService<Dish> {
 
 
     //根据id查询菜品信息和对应的口味信息
-    DishDto getByIdWithFlavor(Long id);
+    DishDto queryWithFlavorById(Long id);
 
 
 
@@ -28,10 +28,10 @@ public interface DishService extends IService<Dish> {
 
 
     //删除菜品信息, 同时删除对应的口味信息
-    boolean deleteWithFlavor(List<Long> ids);
+    boolean deleteWithFlavorByIds(List<Long> ids);
 
 
 
     //批量起售停售
-    boolean updateStatus(Integer status, List<Long> ids);
+    boolean updateStatusByIds(Integer status, List<Long> ids);
 }
