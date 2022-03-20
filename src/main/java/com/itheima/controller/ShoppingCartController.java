@@ -8,7 +8,6 @@ import com.itheima.entity.ShoppingCart;
 import com.itheima.service.ShoppingCartService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -18,7 +17,7 @@ import java.util.Map;
 /**
  * 购物车controller
  */
-@Transactional
+
 @Slf4j
 @RestController
 @RequestMapping("/shoppingCart")

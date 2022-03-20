@@ -4,10 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.itheima.common.CustomException;
-import com.itheima.entity.Category;
-import com.itheima.entity.Setmeal;
-import com.itheima.entity.SetmealDish;
-import com.itheima.entity.SetmealDto;
+import com.itheima.entity.*;
 import com.itheima.mapper.SetmealMapper;
 import com.itheima.service.CategoryService;
 import com.itheima.service.DishService;
@@ -320,5 +317,16 @@ createTime=null, updateTime=null, createUser=null,updateUser=null, isDeleted=nul
 
         return true;
 
+    }
+
+    @Override
+    public boolean updateStatus(Integer status, List<Long> ids) {
+        //条件查询器
+        LambdaUpdateWrapper<Setmeal> luw = new LambdaUpdateWrapper();
+        luw.in(Setmeal::getId, ids).set(Setmeal::getStatus, status);
+
+        boolean flag = this.update(luw);
+
+        return flag;
     }
 }

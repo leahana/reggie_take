@@ -3,9 +3,10 @@ package com.itheima.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.itheima.entity.Setmeal;
 import com.itheima.entity.SetmealDto;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-
+@Transactional
 public interface SetmealService extends IService<Setmeal> {
 
     /**
@@ -40,4 +41,5 @@ public interface SetmealService extends IService<Setmeal> {
 
      boolean updateWithDishV2(SetmealDto setmealDto);
 
+    boolean updateStatus(Integer status, List<Long> ids);
 }

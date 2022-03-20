@@ -12,6 +12,8 @@ import com.itheima.service.SetmealService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -55,7 +57,7 @@ public class SetmealController {
 
 
         //v2
-        boolean flag=setmealService.updateWithDishV2(setmealDto);
+        boolean flag = setmealService.updateWithDishV2(setmealDto);
         //log.error(setmealDto.toString());
 
         if (flag) {
@@ -65,6 +67,15 @@ public class SetmealController {
         }
     }
 
+
+    @PostMapping("/status/{status}")
+    public R<String> updateStatus(@PathVariable Integer status,
+                                  @RequestParam List<Long> ids) {
+
+        setmealService.updateStatus(status, ids);
+
+        return R.success("修改状态成功");
+    }
 
     /**
      * 根据id查询
@@ -83,7 +94,7 @@ public class SetmealController {
 
     }
 
-
+    
     /**
      * 根据条件查询套餐数据
      *
@@ -91,6 +102,7 @@ public class SetmealController {
      * @return
      */
     @GetMapping("/list")
+    @Cacheable(value = "setmealCache", key = "#setmeal.categoryId+'_'+#setmeal.status")
     public R<List<Setmeal>> list(Setmeal setmeal) {
         //条件查询器
         LambdaQueryWrapper<Setmeal> lqw = new LambdaQueryWrapper<>();
@@ -195,6 +207,7 @@ public class SetmealController {
      * @return
      */
     @DeleteMapping
+    @CacheEvict(value = "setmealCache", allEntries = true)//清楚setmealCache名称下所有的缓存数据
     public R<String> delete(@RequestParam List<Long> ids) {
         //记录日志
         log.info("准备删除 id:{}", ids);

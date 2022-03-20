@@ -3,10 +3,11 @@ package com.itheima.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.itheima.entity.Dish;
 import com.itheima.entity.DishDto;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-
+@Transactional
 public interface DishService extends IService<Dish> {
 
 
