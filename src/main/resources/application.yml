@@ -7,6 +7,8 @@ spring:
       time-to-live: 1800000 #设置缓存数据的过期时间
   main:
     allow-circular-references: true
+
+
   servlet:
     #文件大小 MB必须大写
     #  maxFileSize 是单个文件大小

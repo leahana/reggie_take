@@ -164,4 +164,16 @@ public class AddressBookController {
         //返回结果
         return R.success(list);
     }
+
+
+    @DeleteMapping
+    public R<String> deleteAddressBooks(@RequestParam List<Long> ids) {
+
+        boolean flag = addressBookService.removeByIds(ids);
+        if (flag) {
+            return R.success("删除成功");
+        } else {
+            return R.error("请稍后再试");
+        }
+    }
 }

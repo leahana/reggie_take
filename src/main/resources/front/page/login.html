@@ -73,13 +73,13 @@
                     if(this.form.phone && this.form.code){
                         this.loading = true
                         //const res = await loginApi({phone:this.form.phone,code:this.form.code})
-                        const res = await loginApi(this.form)
+                        const res = await loginApi(this.form);
                         this.loading = false
                         if(res.code === 1){
-                            sessionStorage.setItem("userPhone",this.form.phone)
+                            sessionStorage.setItem("userPhone",this.form.phone);
                             window.requestAnimationFrame(()=>{
                                 window.location.href= '/front/index.html'
-                            })                           
+                            })  ;
                         }else{
                             this.$notify({ type:'warning', message:res.msg});
                         }

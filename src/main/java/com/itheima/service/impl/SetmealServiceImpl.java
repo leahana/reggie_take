@@ -290,13 +290,10 @@ createTime=null, updateTime=null, createUser=null,updateUser=null, isDeleted=nul
         setmealDishService.remove(qw);
 
         List<SetmealDish> setmealDishes = setmealDto.getSetmealDishes();
-        log.error(setmealId.toString());
-        log.error(setmealDishes.toString());
+
         setmealDishes = setmealDishes.stream().peek((emp) -> emp.setSetmealId(setmealId)).collect(Collectors.toList());
-        log.error(setmealDishes.toString());
 
         setmealDishService.saveBatch(setmealDishes);
-
 
         LambdaUpdateWrapper<Setmeal> luwS = new LambdaUpdateWrapper<>();
 
