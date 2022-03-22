@@ -54,10 +54,9 @@ public class UserController {
             //SMSUtils.sendMessage("瑞吉外卖", "18711111111", phone, code);
 
             //将要生成的验证码保存到session
-            //session.setAttribute(phone, code);
+            session.setAttribute(phone, code);
 
             //将生成的验证码缓存到redis中,并且设置有效期为5min
-            //         键            值           时间              时间单位
             //四个参数(Object key, object value ,long timeout,TimeUtil unit)
             redisTemplate.opsForValue().set(phone, code, 5, TimeUnit.MINUTES);
 

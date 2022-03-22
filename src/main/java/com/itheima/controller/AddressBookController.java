@@ -176,4 +176,20 @@ public class AddressBookController {
             return R.error("请稍后再试");
         }
     }
+
+    @PutMapping
+    public R<String> updateAddressBook(@RequestBody AddressBook addressBook) {
+
+        LambdaUpdateWrapper<AddressBook> luw = new LambdaUpdateWrapper<>();
+        luw.eq(addressBook.getId() != null, AddressBook::getId, addressBook.getId());
+
+        boolean flag = addressBookService.update(addressBook, luw);
+
+        if (flag) {
+            return R.success("修改成功");
+        } else {
+            return R.error("修改失败");
+        }
+
+    }
 }
