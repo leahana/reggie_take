@@ -17,8 +17,8 @@ public class BaseContext {
      * 获取值
      * @return id
      */
-    public static Long getCurrentId(){
         //public T get() : 返回当前线程所对应的线程局部变量的值
+    public static Long getCurrentId(){
         return threadLocal.get();
     }
 }

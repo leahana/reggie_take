@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 
 @Slf4j
-//补货controller层的异常
+//捕获controller层的异常
 //@RestControllerAdvice(annotations = {RestController.class, Controller.class})
 public class CustomException extends RuntimeException {
 

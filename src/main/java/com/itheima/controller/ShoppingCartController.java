@@ -108,7 +108,9 @@ public class ShoppingCartController {
         LambdaQueryWrapper<ShoppingCart> lqw = new LambdaQueryWrapper<>();
 
         //添加查询条件--用户id
-        lqw.eq(ShoppingCart::getUserId, BaseContext.getCurrentId());
+        Long currentId = BaseContext.getCurrentId();
+
+        lqw.eq(ShoppingCart::getUserId, currentId);
 
         //添加排序条件--创建时间降序
         lqw.orderByDesc(ShoppingCart::getCreateTime);
