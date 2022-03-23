@@ -3,19 +3,16 @@ package com.itheima.filter;
 import com.alibaba.fastjson.JSON;
 import com.itheima.common.BaseContext;
 import com.itheima.common.R;
-import javax.servlet.*;
-import javax.servlet.annotation.WebFilter;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.AntPathMatcher;
 
+import javax.servlet.*;
+import javax.servlet.annotation.WebFilter;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
-
-import static jdk.nashorn.internal.runtime.regexp.joni.Config.log;
 
 
 /**
@@ -73,7 +70,11 @@ public class LoginFilter implements Filter {
                 "/front/**",
                 "/common/**",
                 "/user/sendMsg",
-                "/user/login"};
+                "/user/login",
+                "/doc.html",
+                "/webjars/**",
+                "/swagger-resources",
+                "/v2/api-docs"};
 /*
         for (String url : urls) {
             boolean match = PATH_MATCH.match(url, requestURI);

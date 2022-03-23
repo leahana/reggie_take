@@ -9,6 +9,10 @@ import com.itheima.entity.SetmealDto;
 import com.itheima.service.CategoryService;
 import com.itheima.service.SetmealDishService;
 import com.itheima.service.SetmealService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +30,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @RestController
 @RequestMapping("/setmeal")
+@Api(tags = "套餐相关接口")
 public class SetmealController {
 
 
@@ -108,6 +113,7 @@ public class SetmealController {
      * @return
      */
     @GetMapping("/list")
+    @ApiOperation(value = "套餐条件查询接口")
     @Cacheable(value = "setmealCache", key = "#setmeal.categoryId+'_'+#setmeal.status")
     public R<List<Setmeal>> querySetmeals(Setmeal setmeal) {
         //条件查询器
@@ -137,6 +143,7 @@ public class SetmealController {
      * @return
      */
     @PostMapping
+    @ApiOperation(value = "新增套餐接口")
     public R<String> saveSetmeal(@RequestBody SetmealDto setmealDto) {
         //记录日志
         log.info("套餐信息:{}", setmealDto);
@@ -156,6 +163,12 @@ public class SetmealController {
      * @return
      */
     @GetMapping("/page")
+    @ApiOperation(value = "套餐分页查询接口")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "page",value = "页码",required = true),
+            @ApiImplicitParam(name = "pageSize",value = "每页记录数",required = true),
+            @ApiImplicitParam(name = "name",value = "套餐名称",required = false)
+    })
     public R<Page> pageSetmeals(int page, int pageSize, String name) {
         //初始化分页构造器对象
         Page<Setmeal> iPage = new Page<>(page, pageSize);
@@ -212,7 +225,8 @@ public class SetmealController {
      * @return
      */
     @DeleteMapping
-    @CacheEvict(value = "setmealCache", allEntries = true)//清楚setmealCache名称下所有的缓存数据
+    @CacheEvict(value = "setmealCache", allEntries = true)//清除setmealCache名称下所有的缓存数据
+    @ApiOperation(value = "套餐删除接口")
     public R<String> deleteSetmeals(@RequestParam List<Long> ids) {
         //记录日志
         log.info("准备删除 id:{}", ids);

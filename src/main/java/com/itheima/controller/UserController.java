@@ -126,6 +126,16 @@ public class UserController {
         //验证码输入错误
         return R.error("登陆失败");
     }
+
+
+
+    @PostMapping("/loginout")
+    public R<String> logout(HttpSession session){
+        session.removeAttribute("user");
+
+        return R.success("退出登录成功");
+
+    }
 }
 
 
