@@ -2,7 +2,6 @@ package com.itheima.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
-import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.itheima.common.BaseContext;
 import com.itheima.common.CustomException;
@@ -108,6 +107,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders>
                     .multiply(new BigDecimal(temp.getNumber())).intValue());
 
             return orderDetail;
+
+
         }).collect(Collectors.toList());
 
         //组装订单信息

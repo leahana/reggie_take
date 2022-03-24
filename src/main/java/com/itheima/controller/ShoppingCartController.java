@@ -142,12 +142,15 @@ public class ShoppingCartController {
     }
 
 
+    /**
+     * 减少购物车菜品数量
+     * @param map
+     * @return
+     */
     @PostMapping("/sub")
     public R<String> subShoppingCart(@RequestBody Map<String, Long> map) {
 
-
         //log.error(map.toString());
-
 
         boolean flag = shoppingCartService.deleteDishOrSetmeal(map);
 
