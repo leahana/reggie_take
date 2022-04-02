@@ -429,6 +429,15 @@ public class DishController {
 
         dishService.updateStatusByIds(status, ids);
 
+      /*  Set keys = redisTemplate.keys("dish_*"); //获取所有以dish_xxx开头的key
+        redisTemplate.delete(keys); //删除这些key*/
+
+        List<Dish> dishes = dishService.listByIds(ids);
+        for (Dish dish : dishes) {
+            String key ="dish_"+dish.getCategoryId()+"_1";
+            redisTemplate.delete(key);
+        }
+
         return R.success("操作成功");
     }
 
@@ -444,6 +453,12 @@ public class DishController {
 
         dishService.deleteWithFlavorByIds(ids);
 
+
+        List<Dish> dishes = dishService.listByIds(ids);
+        for (Dish dish : dishes) {
+            String key ="dish_"+dish.getCategoryId()+"_1";
+            redisTemplate.delete(key);
+        }
         return R.success("删除成功");
     }
 
